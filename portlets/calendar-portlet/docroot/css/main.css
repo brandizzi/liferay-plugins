@@ -60,6 +60,10 @@
 	border-color: #FC0;
 }
 
+.scheduler-event-past {
+	opacity: 0.4;
+}
+
 .calendar-portlet-event-loading {
 	@include opacity(0.5);
 }
@@ -471,4 +475,14 @@
 
 .simple-color-picker-item:hover, .simple-color-picker-item-selected {
 	@include transition(border-color 0s);
+}
+
+.calendar-booking-reminders .reminder-type {
+	display: inline-block;
+	margin-bottom: 11px;
+	padding: 4px 6px;
+}
+
+.scheduler-base-controls .calendar-create-event-btn {
+	margin-right: 3px;
 }
