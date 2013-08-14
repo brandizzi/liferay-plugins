@@ -442,7 +442,7 @@ JSONArray otherCalendarsJSONArray = CalendarUtil.toCalendarsJSONArray(themeDispl
 							destroyOnHide: true,
 							modal: true
 						},
-						title: Liferay.Language.get('new-calendar-booking'),
+						title: Liferay.Language.get('add-event'),
 						uri: A.Lang.sub(
 							editCalendarBookingURL,
 							{
