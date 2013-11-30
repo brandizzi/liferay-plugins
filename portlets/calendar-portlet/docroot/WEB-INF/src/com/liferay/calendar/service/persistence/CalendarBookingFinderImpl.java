@@ -632,7 +632,7 @@ public class CalendarBookingFinderImpl
 
 	protected String getStatuses(int[] statuses) {
 		if (ArrayUtil.isEmpty(statuses)) {
-			return StringPool.BLANK;
+			return Boolean.TRUE.toString();
 		}
 
 		StringBundler sb = new StringBundler(statuses.length * 2 + 1);
