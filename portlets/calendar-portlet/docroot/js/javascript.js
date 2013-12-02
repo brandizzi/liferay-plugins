@@ -1468,7 +1468,56 @@ AUI.add(
 									);
 								}
 								else if (schedulerEvent.isMasterBooking()) {
-									CalendarUtil.updateEvent(schedulerEvent);
+									var endDate = CalendarUtil.toUTC(schedulerEvent.get('endDate'));
+
+									var startDate = CalendarUtil.toUTC(schedulerEvent.get('startDate'));
+
+									CalendarUtil.invokeService(
+											{
+												'/calendar-portlet/calendarbooking/search-count': {
+													calendarIds: STR_BLANK,
+													calendarResourceIds: STR_BLANK,
+													companyId: COMPANY_ID,
+													endTime: endDate.getTime(),
+													groupIds: STR_BLANK,
+													keywords: STR_BLANK,
+													parentCalendarBookingId: schedulerEvent.get('calendarBookingId'),
+													recurring: schedulerEvent.isRecurring(),
+													startTime: startDate.getTime(),
+													statuses: ''
+												}
+											},
+											{
+												success: function(data) {
+													if (data > 1) {
+														var content = [
+															'<p class="calendar-portlet-confirmation-text">',
+															Liferay.Language.get('your-changes-will-affect-all-invited-resources-events'),
+															'</p>',
+															'<p class="calendar-portlet-confirmation-text">',
+															Liferay.Language.get('invited-resources-will-be-notified'),
+															'</p>'
+														].join(STR_BLANK);
+
+														Liferay.CalendarMessageUtil.confirm(
+															content,
+															Liferay.Language.get('continue'),
+															Liferay.Language.get('dont-change-the-event'),
+															function() {
+																CalendarUtil.updateEvent(schedulerEvent);
+
+																this.hide();
+															},
+															function() {
+																instance.load();
+
+																this.hide();
+															}
+														);
+													}
+												}
+											}
+									);
 								}
 								else {
 									var calendar = Liferay.CalendarUtil.availableCalendars[schedulerEvent.get('calendarId')];
