@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -323,30 +324,41 @@ public class CalendarBookingLocalServiceImpl
 
 		Recurrence recurrenceObj = calendarBooking.getRecurrenceObj();
 
-		if (allFollowing) {
-			if (startTime == calendarBooking.getStartTime()) {
-				calendarBookingLocalService.deleteCalendarBooking(
-					calendarBooking);
+		List<CalendarBooking> calendarBookings =
+				getChildCalendarBookings(
+						calendarBooking.getCalendarBookingId());
 
-				return;
-			}
-
-			if (recurrenceObj.getCount() > 0) {
-				recurrenceObj.setCount(0);
-			}
-
-			startTimeJCalendar.add(java.util.Calendar.DATE, -1);
-
-			recurrenceObj.setUntilJCalendar(startTimeJCalendar);
-		}
-		else {
-			recurrenceObj.addExceptionDate(startTimeJCalendar);
+		if (!calendarBookings.contains(calendarBooking)) {
+			calendarBookings = ListUtil.copy(calendarBookings);
+			calendarBookings.add(0, calendarBooking);
 		}
 
-		calendarBooking.setRecurrence(
-			RecurrenceSerializer.serialize(recurrenceObj));
+		for (CalendarBooking editingCalendarBooking : calendarBookings) {
+			if (allFollowing) {
+				if (startTime == editingCalendarBooking.getStartTime()) {
+					calendarBookingLocalService.deleteCalendarBooking(
+							editingCalendarBooking);
 
-		calendarBookingPersistence.update(calendarBooking);
+					continue;
+				}
+
+				if (recurrenceObj.getCount() > 0) {
+					recurrenceObj.setCount(0);
+				}
+
+				startTimeJCalendar.add(java.util.Calendar.DATE, -1);
+
+				recurrenceObj.setUntilJCalendar(startTimeJCalendar);
+			}
+			else {
+				recurrenceObj.addExceptionDate(startTimeJCalendar);
+			}
+
+			editingCalendarBooking.setRecurrence(
+				RecurrenceSerializer.serialize(recurrenceObj));
+
+			calendarBookingPersistence.update(editingCalendarBooking);
+		}
 	}
 
 	@Override
