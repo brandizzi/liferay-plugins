@@ -312,6 +312,8 @@ public class CalendarPortlet extends MVCPortlet {
 		long[] reminders = getReminders(actionRequest);
 		String[] remindersType = getRemindersType(actionRequest);
 		int status = ParamUtil.getInteger(actionRequest, "status");
+		boolean updateChildCalendars = ParamUtil.getBoolean(
+				actionRequest, "updateChildCalendars");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			CalendarBooking.class.getName(), actionRequest);
@@ -363,7 +365,8 @@ public class CalendarPortlet extends MVCPortlet {
 						(calendarBooking.getStartTime() + offset),
 						(calendarBooking.getStartTime() + offset + duration),
 						allDay, recurrence, reminders[0], remindersType[0],
-						reminders[1], remindersType[1], status, serviceContext);
+						reminders[1], remindersType[1], status,
+						updateChildCalendars, serviceContext);
 			}
 		}
 
