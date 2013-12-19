@@ -539,6 +539,14 @@ public class CalendarBookingLocalServiceImpl
 	}
 
 	@Override
+	public int getChildCalendarBookingsCount(long calendarBookingId)
+		throws SystemException {
+
+		return calendarBookingPersistence.countByParentCalendarBookingId(
+			calendarBookingId);
+	}
+
+	@Override
 	public void moveCalendarBookingToTrash(
 			long userId, CalendarBooking calendarBooking)
 		throws PortalException, SystemException {
@@ -907,7 +915,7 @@ public class CalendarBookingLocalServiceImpl
 			parentCalendarBookingId =
 				CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT;
 		}
-		
+
 		if (!updateChildCalendars) {
 			childCalendarIds = new long[0];
 		}
@@ -1152,8 +1160,7 @@ public class CalendarBookingLocalServiceImpl
 					childCalendarBooking.getCalendarId());
 			}
 
-			existingCalendarIds.add(
-					childCalendarBooking.getCalendarId());
+			existingCalendarIds.add(childCalendarBooking.getCalendarId());
 		}
 
 		for (long calendarId : updatedChildCalendarIds) {
