@@ -374,8 +374,7 @@ public class CalendarBookingLocalServiceImpl
 				}
 
 				java.util.Calendar endTimeJCalendar =
-					JCalendarUtil.getJCalendar(
-						startTime);
+					JCalendarUtil.getJCalendar(startTime);
 				endTimeJCalendar.add(java.util.Calendar.DATE, -1);
 
 				recurrenceObj.setUntilJCalendar(endTimeJCalendar);
