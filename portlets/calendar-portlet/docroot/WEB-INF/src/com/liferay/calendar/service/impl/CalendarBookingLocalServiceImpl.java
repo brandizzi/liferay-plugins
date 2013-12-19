@@ -507,6 +507,14 @@ public class CalendarBookingLocalServiceImpl
 	}
 
 	@Override
+	public int getChildCalendarBookingsCount(long calendarBookingId)
+		throws SystemException {
+
+		return calendarBookingPersistence.countByParentCalendarBookingId(
+			calendarBookingId);
+	}
+
+	@Override
 	public void moveCalendarBookingToTrash(
 			long userId, CalendarBooking calendarBooking)
 		throws PortalException, SystemException {
@@ -879,13 +887,6 @@ public class CalendarBookingLocalServiceImpl
 			parentCalendarBookingId =
 				CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT;
 		}
-<<<<<<< Updated upstream
-		
-		if (!updateChildCalendars) {
-			childCalendarIds = new long[0];
-		}
-=======
->>>>>>> Stashed changes
 
 		return addCalendarBooking(
 			userId, calendarId, childCalendarIds, parentCalendarBookingId,
@@ -1114,25 +1115,8 @@ public class CalendarBookingLocalServiceImpl
 				continue;
 			}
 
-<<<<<<< Updated upstream
-			if (updateChildCalendars ||
-				!updatedChildCalendarIds.contains(
-						childCalendarBooking.getCalendarId())) {
-
-				deleteCalendarBooking(
-						childCalendarBooking.getCalendarBookingId());
-			}
-			else {
-				updatedChildCalendarIds.remove(
-					childCalendarBooking.getCalendarId());
-			}
-
-			existingCalendarIds.add(
-					childCalendarBooking.getCalendarId());
-=======
 			deleteCalendarBooking(childCalendarBooking.getCalendarBookingId());
 			existingCalendarIds.add(childCalendarBooking.getCalendarId());
->>>>>>> Stashed changes
 		}
 
 		for (long calendarId : childCalendarIds) {

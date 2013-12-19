@@ -112,7 +112,7 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 
 	<aui:model-context bean="<%= calendarBooking %>" model="<%= CalendarBooking.class %>" />
 
-	<aui:fieldset cssClass='<%= reschedulable? "" : "calendar-portlet-not-reschedulable" %>' id="mainCalendarBookingFields">
+	<aui:fieldset>
 		<aui:input name="title" />
 
 		<div class="<%= allDay ? "allday-class-active" : "" %>" id="<portlet:namespace />startDateContainer">
