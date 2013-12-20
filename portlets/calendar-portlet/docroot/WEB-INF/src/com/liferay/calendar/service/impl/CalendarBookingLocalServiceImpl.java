@@ -363,7 +363,7 @@ public class CalendarBookingLocalServiceImpl
 					calendarBookingLocalService.deleteCalendarBooking(
 							editingCalendarBooking);
 
-					return;
+					continue;
 				}
 
 				if (recurrenceObj.getCount() > 0) {
