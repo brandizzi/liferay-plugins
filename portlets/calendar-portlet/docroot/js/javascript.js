@@ -171,30 +171,53 @@ AUI.add(
 			},
 
 			askUserConfirmations: function(schedulerEvent, previousTime, newTime, callbacks) {
+				var responses = {
+						hasChildren: false,
+						isMasterBooking: schedulerEvent.isMasterBooking(),
+						isRecurring: schedulerEvent.isRecurring(),
+						saveOneInstance: false,
+						saveFollowingInstances: false,
+						saveAllInstances: false,
+						updateChildCalendars: false
+				};
 				callbacks = callbacks || CalendarUtil;
 
 				if (schedulerEvent.isMasterBooking()) {
+
+					responses.isMasterBooking = true;
+
 					CalendarUtil.countChildrenCalendarBookings(
 							schedulerEvent,
 							function(childrenCount) {
 								if (childrenCount > 1) {
+
+									responses.hasChildren = true;
+
 									Liferay.CalendarMessageUtil.confirmChildCalendarBookingUpdate(
 											function() {
+												responses.updateChildCalendars = false;
+
 												if (schedulerEvent.isRecurring()) {
 													Liferay.RecurrenceUtil.openConfirmationPanel(
 															'update',
 															schedulerEvent.isMasterBooking(),
 															function() {
+																responses.saveOneInstance = true;
+
 																callbacks.saveOneInstance(schedulerEvent, false);
 
 																this.hide();
 															},
 															function() {
+																responses.saveFollowingInstances = true;
+
 																callbacks.saveFollowingInstances(schedulerEvent, false);
 
 																this.hide();
 															},
 															function() {
+																responses.saveAllInstances = true;
+
 																callbacks.saveAllInstances(schedulerEvent, previousTime, newTime, false);
 
 																this.hide();
@@ -213,27 +236,35 @@ AUI.add(
 												this.hide();
 											},
 											function() {
+												responses.updateChildCalendars = true;
+
 												if (schedulerEvent.isRecurring()) {
 													Liferay.RecurrenceUtil.openConfirmationPanel(
 															'update',
 															schedulerEvent.isMasterBooking(),
 															function() {
-																callbacks.saveOneInstance(schedulerEvent, true);
+																responses.saveOneInstance = true;
+
+																callbacks.saveOneInstance(schedulerEvent, false);
 
 																this.hide();
 															},
 															function() {
-																callbacks.saveFollowingInstances(schedulerEvent, true);
+																responses.saveFollowingInstances = true;
+
+																callbacks.saveFollowingInstances(schedulerEvent, false);
 
 																this.hide();
 															},
 															function() {
-																callbacks.saveAllInstances(schedulerEvent, previousTime, newTime, true);
+																responses.saveAllInstances = true;
+
+																callbacks.saveAllInstances(schedulerEvent, previousTime, newTime, false);
 
 																this.hide();
 															},
 															function() {
-																callbacks.cancelSaving(schedulerEvent);
+																callbacks.cancelSaving(schedulerEvent, false);
 
 																this.hide();
 															}
