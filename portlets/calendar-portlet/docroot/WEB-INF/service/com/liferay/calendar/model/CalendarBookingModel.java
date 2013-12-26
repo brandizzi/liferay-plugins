@@ -258,6 +258,20 @@ public interface CalendarBookingModel extends BaseModel<CalendarBooking>,
 	public void setCalendarResourceId(long calendarResourceId);
 
 	/**
+	 * Returns the sibling calendar booking ID of this calendar booking.
+	 *
+	 * @return the sibling calendar booking ID of this calendar booking
+	 */
+	public long getSiblingCalendarBookingId();
+
+	/**
+	 * Sets the sibling calendar booking ID of this calendar booking.
+	 *
+	 * @param siblingCalendarBookingId the sibling calendar booking ID of this calendar booking
+	 */
+	public void setSiblingCalendarBookingId(long siblingCalendarBookingId);
+
+	/**
 	 * Returns the parent calendar booking ID of this calendar booking.
 	 *
 	 * @return the parent calendar booking ID of this calendar booking

@@ -87,11 +87,12 @@ public class CalendarBookingLocalServiceImpl
 	@Override
 	public CalendarBooking addCalendarBooking(
 			long userId, long calendarId, long[] childCalendarIds,
-			long parentCalendarBookingId, Map<Locale, String> titleMap,
-			Map<Locale, String> descriptionMap, String location, long startTime,
-			long endTime, boolean allDay, String recurrence, long firstReminder,
-			String firstReminderType, long secondReminder,
-			String secondReminderType, ServiceContext serviceContext)
+			long parentCalendarBookingId, long siblingCalendarBookingId,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			String location, long startTime, long endTime, boolean allDay,
+			String recurrence, long firstReminder, String firstReminderType,
+			long secondReminder, String secondReminderType,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		// Calendar booking
@@ -154,6 +155,14 @@ public class CalendarBookingLocalServiceImpl
 			calendarBooking.setParentCalendarBookingId(calendarBookingId);
 		}
 
+		if (siblingCalendarBookingId > 0) {
+			calendarBooking.setSiblingCalendarBookingId(
+				siblingCalendarBookingId);
+		}
+		else {
+			calendarBooking.setSiblingCalendarBookingId(calendarBookingId);
+		}
+
 		calendarBooking.setTitleMap(titleMap);
 		calendarBooking.setDescriptionMap(descriptionMap);
 		calendarBooking.setLocation(location);
@@ -207,6 +216,24 @@ public class CalendarBookingLocalServiceImpl
 			userId, calendarBookingId, serviceContext);
 
 		return calendarBooking;
+	}
+
+	@Override
+	public CalendarBooking addCalendarBooking(
+			long userId, long calendarId, long[] childCalendarIds,
+			long parentCalendarBookingId, Map<Locale, String> titleMap,
+			Map<Locale, String> descriptionMap, String location, long startTime,
+			long endTime, boolean allDay, String recurrence, long firstReminder,
+			String firstReminderType, long secondReminder,
+			String secondReminderType, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return addCalendarBooking(
+			userId, calendarId, childCalendarIds, parentCalendarBookingId,
+			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
+			titleMap, descriptionMap, location, startTime, endTime, allDay,
+			recurrence, firstReminder, firstReminderType, secondReminder,
+			secondReminderType, serviceContext);
 	}
 
 	@Override
@@ -756,11 +783,16 @@ public class CalendarBookingLocalServiceImpl
 		calendarBookingPersistence.update(calendarBooking);
 
 		if (updateChildCalendars) {
-			modelChildCalendarBooking = calendarBooking;
+			modelChildCalendarBooking =
+				(CalendarBooking)calendarBooking.clone();
 		}
 
+		modelChildCalendarBooking.setParentCalendarBookingId(calendarBookingId);
+		modelChildCalendarBooking.setSiblingCalendarBookingId(
+			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT);
+
 		addChildCalendarBookings(
-			calendarBooking, childCalendarIds, serviceContext);
+			modelChildCalendarBooking, childCalendarIds, serviceContext);
 
 		// Asset
 
@@ -856,6 +888,8 @@ public class CalendarBookingLocalServiceImpl
 
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+		CalendarBooking modelChildCalendarBooking =
+				calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
 		String oldRecurrence = calendarBooking.getRecurrence();
 
@@ -888,11 +922,31 @@ public class CalendarBookingLocalServiceImpl
 				CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT;
 		}
 
-		return addCalendarBooking(
+		calendarBooking = addCalendarBooking(
 			userId, calendarId, childCalendarIds, parentCalendarBookingId,
-			titleMap, descriptionMap, location, startTime, endTime, allDay,
-			recurrence, firstReminder, firstReminderType, secondReminder,
-			secondReminderType, serviceContext);
+			calendarBookingId, titleMap, descriptionMap, location, startTime,
+			endTime, allDay, recurrence, firstReminder, firstReminderType,
+			secondReminder, secondReminderType, serviceContext);
+
+		if (updateChildCalendars) {
+			modelChildCalendarBooking =
+				(CalendarBooking)calendarBooking.clone();
+		}
+
+		modelChildCalendarBooking.setStartTime(startTime);
+		modelChildCalendarBooking.setEndTime(endTime);
+		modelChildCalendarBooking.setRecurrence(recurrence);
+		modelChildCalendarBooking.setCalendarBookingId(
+			calendarBooking.getCalendarBookingId());
+		modelChildCalendarBooking.setParentCalendarBookingId(
+			calendarBooking.getCalendarBookingId());
+		modelChildCalendarBooking.setSiblingCalendarBookingId(
+			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT);
+
+		addChildCalendarBookings(
+			modelChildCalendarBooking, childCalendarIds, serviceContext);
+
+		return calendarBooking;
 	}
 
 	@Override
@@ -1130,6 +1184,7 @@ public class CalendarBookingLocalServiceImpl
 			CalendarBooking childCalendarBooking = addCalendarBooking(
 				calendarBooking.getUserId(), calendarId, new long[0],
 				calendarBooking.getCalendarBookingId(),
+				calendarBooking.getSiblingCalendarBookingId(),
 				calendarBooking.getTitleMap(),
 				calendarBooking.getDescriptionMap(),
 				calendarBooking.getLocation(), calendarBooking.getStartTime(),

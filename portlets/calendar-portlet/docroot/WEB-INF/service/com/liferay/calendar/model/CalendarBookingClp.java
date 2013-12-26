@@ -107,6 +107,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 		attributes.put("resourceBlockId", getResourceBlockId());
 		attributes.put("calendarId", getCalendarId());
 		attributes.put("calendarResourceId", getCalendarResourceId());
+		attributes.put("siblingCalendarBookingId", getSiblingCalendarBookingId());
 		attributes.put("parentCalendarBookingId", getParentCalendarBookingId());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
@@ -196,6 +197,13 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 
 		if (calendarResourceId != null) {
 			setCalendarResourceId(calendarResourceId);
+		}
+
+		Long siblingCalendarBookingId = (Long)attributes.get(
+				"siblingCalendarBookingId");
+
+		if (siblingCalendarBookingId != null) {
+			setSiblingCalendarBookingId(siblingCalendarBookingId);
 		}
 
 		Long parentCalendarBookingId = (Long)attributes.get(
@@ -557,6 +565,31 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 						long.class);
 
 				method.invoke(_calendarBookingRemoteModel, calendarResourceId);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
+	}
+
+	@Override
+	public long getSiblingCalendarBookingId() {
+		return _siblingCalendarBookingId;
+	}
+
+	@Override
+	public void setSiblingCalendarBookingId(long siblingCalendarBookingId) {
+		_siblingCalendarBookingId = siblingCalendarBookingId;
+
+		if (_calendarBookingRemoteModel != null) {
+			try {
+				Class<?> clazz = _calendarBookingRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setSiblingCalendarBookingId",
+						long.class);
+
+				method.invoke(_calendarBookingRemoteModel,
+					siblingCalendarBookingId);
 			}
 			catch (Exception e) {
 				throw new UnsupportedOperationException(e);
@@ -1703,6 +1736,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 		clone.setResourceBlockId(getResourceBlockId());
 		clone.setCalendarId(getCalendarId());
 		clone.setCalendarResourceId(getCalendarResourceId());
+		clone.setSiblingCalendarBookingId(getSiblingCalendarBookingId());
 		clone.setParentCalendarBookingId(getParentCalendarBookingId());
 		clone.setTitle(getTitle());
 		clone.setDescription(getDescription());
@@ -1789,7 +1823,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(57);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1813,6 +1847,8 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 		sb.append(getCalendarId());
 		sb.append(", calendarResourceId=");
 		sb.append(getCalendarResourceId());
+		sb.append(", siblingCalendarBookingId=");
+		sb.append(getSiblingCalendarBookingId());
 		sb.append(", parentCalendarBookingId=");
 		sb.append(getParentCalendarBookingId());
 		sb.append(", title=");
@@ -1852,7 +1888,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(85);
+		StringBundler sb = new StringBundler(88);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.calendar.model.CalendarBooking");
@@ -1901,6 +1937,10 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 		sb.append(
 			"<column><column-name>calendarResourceId</column-name><column-value><![CDATA[");
 		sb.append(getCalendarResourceId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>siblingCalendarBookingId</column-name><column-value><![CDATA[");
+		sb.append(getSiblingCalendarBookingId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>parentCalendarBookingId</column-name><column-value><![CDATA[");
@@ -1984,6 +2024,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 	private long _resourceBlockId;
 	private long _calendarId;
 	private long _calendarResourceId;
+	private long _siblingCalendarBookingId;
 	private long _parentCalendarBookingId;
 	private String _title;
 	private String _titleCurrentLanguageId;

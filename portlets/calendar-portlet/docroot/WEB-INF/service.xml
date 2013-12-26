@@ -80,6 +80,7 @@
 
 		<column name="calendarId" type="long" />
 		<column name="calendarResourceId" type="long" />
+		<column name="siblingCalendarBookingId" type="long" />
 		<column name="parentCalendarBookingId" type="long" />
 		<column name="title" type="String" localized="true" />
 		<column name="description" type="String" localized="true" />
@@ -112,12 +113,20 @@
 		<finder name="CalendarResourceId" return-type="Collection">
 			<finder-column name="calendarResourceId" />
 		</finder>
+		<finder name="SiblingCalendarBookingId" return-type="Collection">
+			<finder-column name="siblingCalendarBookingId" />
+		</finder>
 		<finder name="ParentCalendarBookingId" return-type="Collection">
 			<finder-column name="parentCalendarBookingId" />
 		</finder>
 		<finder name="C_P" return-type="Collection">
 			<finder-column name="calendarId" />
 			<finder-column name="parentCalendarBookingId" />
+		</finder>
+		<finder name="ParentCalendarBookingId" return-type="CalendarBooking">
+			<finder-column name="calendarId" />
+			<finder-column name="parentCalendarBookingId" />
+			<finder-column name="startTime" />
 		</finder>
 		<finder name="C_S" return-type="Collection">
 			<finder-column name="calendarId" />

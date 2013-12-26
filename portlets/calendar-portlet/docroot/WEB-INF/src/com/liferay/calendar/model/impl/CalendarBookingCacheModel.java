@@ -38,7 +38,7 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 	Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(57);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -62,6 +62,8 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		sb.append(calendarId);
 		sb.append(", calendarResourceId=");
 		sb.append(calendarResourceId);
+		sb.append(", siblingCalendarBookingId=");
+		sb.append(siblingCalendarBookingId);
 		sb.append(", parentCalendarBookingId=");
 		sb.append(parentCalendarBookingId);
 		sb.append(", title=");
@@ -139,6 +141,7 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		calendarBookingImpl.setResourceBlockId(resourceBlockId);
 		calendarBookingImpl.setCalendarId(calendarId);
 		calendarBookingImpl.setCalendarResourceId(calendarResourceId);
+		calendarBookingImpl.setSiblingCalendarBookingId(siblingCalendarBookingId);
 		calendarBookingImpl.setParentCalendarBookingId(parentCalendarBookingId);
 
 		if (title == null) {
@@ -226,6 +229,7 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		resourceBlockId = objectInput.readLong();
 		calendarId = objectInput.readLong();
 		calendarResourceId = objectInput.readLong();
+		siblingCalendarBookingId = objectInput.readLong();
 		parentCalendarBookingId = objectInput.readLong();
 		title = objectInput.readUTF();
 		description = objectInput.readUTF();
@@ -271,6 +275,7 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		objectOutput.writeLong(resourceBlockId);
 		objectOutput.writeLong(calendarId);
 		objectOutput.writeLong(calendarResourceId);
+		objectOutput.writeLong(siblingCalendarBookingId);
 		objectOutput.writeLong(parentCalendarBookingId);
 
 		if (title == null) {
@@ -347,6 +352,7 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 	public long resourceBlockId;
 	public long calendarId;
 	public long calendarResourceId;
+	public long siblingCalendarBookingId;
 	public long parentCalendarBookingId;
 	public String title;
 	public String description;

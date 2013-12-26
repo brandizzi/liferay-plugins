@@ -112,6 +112,10 @@ public class CalendarBookingStagedModelDataHandler
 			calendarIds, calendarBooking.getCalendarId(),
 			calendarBooking.getCalendarId());
 
+		Map<Long, Long> calendarBookingIds =
+				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+						CalendarBooking.class);
+
 		long parentCalendarBookingId =
 			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT;
 
@@ -119,15 +123,16 @@ public class CalendarBookingStagedModelDataHandler
 			StagedModelDataHandlerUtil.importReferenceStagedModels(
 				portletDataContext, calendarBooking, CalendarBooking.class);
 
-			Map<Long, Long> calendarBookingIds =
-				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
-					CalendarBooking.class);
-
 			parentCalendarBookingId = MapUtil.getLong(
 				calendarBookingIds,
 				calendarBooking.getParentCalendarBookingId(),
 				calendarBooking.getParentCalendarBookingId());
 		}
+
+		long siblingCalendarBookingId = MapUtil.getLong(
+				calendarBookingIds,
+				calendarBooking.getSiblingCalendarBookingId(),
+				calendarBooking.getSiblingCalendarBookingId());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			calendarBooking);
@@ -147,7 +152,8 @@ public class CalendarBookingStagedModelDataHandler
 				importedCalendarBooking =
 					CalendarBookingLocalServiceUtil.addCalendarBooking(
 						userId, calendarId, new long[0],
-						parentCalendarBookingId, calendarBooking.getTitleMap(),
+						parentCalendarBookingId, siblingCalendarBookingId,
+						calendarBooking.getTitleMap(),
 						calendarBooking.getDescriptionMap(),
 						calendarBooking.getLocation(),
 						calendarBooking.getStartTime(),
@@ -182,7 +188,7 @@ public class CalendarBookingStagedModelDataHandler
 			importedCalendarBooking =
 				CalendarBookingLocalServiceUtil.addCalendarBooking(
 					userId, calendarId, new long[0], parentCalendarBookingId,
-					calendarBooking.getTitleMap(),
+					siblingCalendarBookingId, calendarBooking.getTitleMap(),
 					calendarBooking.getDescriptionMap(),
 					calendarBooking.getLocation(),
 					calendarBooking.getStartTime(),
