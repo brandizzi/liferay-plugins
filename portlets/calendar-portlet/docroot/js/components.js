@@ -538,6 +538,13 @@
 
 							var scheduler = instance.get('scheduler');
 
+							val = AArray.unique(
+								val,
+								function(calendar1, calendar2) {
+									return calendar1.calendarId == calendar2.calendarId;
+								}
+							);
+
 							AArray.each(
 								val,
 								function(item, index, collection) {
