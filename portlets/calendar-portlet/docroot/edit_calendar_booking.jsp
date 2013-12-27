@@ -501,7 +501,8 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 			simpleMenu: calendarsMenu,
 			strings: {
 				emptyMessage: '<liferay-ui:message key="no-pending-invites" />'
-			}
+			},
+			unique: true
 		}
 	).render();
 
@@ -525,7 +526,8 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 			simpleMenu: calendarsMenu,
 			strings: {
 				emptyMessage: '<liferay-ui:message key="no-accepted-invites" />'
-			}
+			},
+			unique: true
 		}
 	).render();
 
@@ -550,7 +552,8 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 				simpleMenu: calendarsMenu,
 				strings: {
 					emptyMessage: '<liferay-ui:message key="no-declined-invites" />'
-				}
+				},
+				unique: true
 			}
 		).render();
 
@@ -574,7 +577,8 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 				simpleMenu: calendarsMenu,
 				strings: {
 					emptyMessage: '<liferay-ui:message key="no-outstanding-invites" />'
-				}
+				},
+				unique: true
 			}
 		).render();
 	</c:if>
