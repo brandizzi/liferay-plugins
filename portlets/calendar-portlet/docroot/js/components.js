@@ -1044,22 +1044,11 @@
 
 					if (actionName === 'delete') {
 						titleText = Liferay.Language.get('delete-recurring-event');
-						changeDeleteText = Liferay.Language.get('would-you-like-to-delete-only-this-event-all-events-in-the-series-or-this-and-all-future-events-in-the-series');
+						changeDeleteText = Liferay.Language.get('what-would-you-like-to-move-to-the-trash-bin-only-this-event-all-events-in-the-series-or-this-and-all-following-events-in-the-series');
 					}
 					else {
 						titleText = Liferay.Language.get('change-recurring-event');
-						changeDeleteText = Liferay.Language.get('would-you-like-to-change-only-this-event-all-events-in-the-series-or-this-and-all-future-events-in-the-series');
-					}
-
-					var content = [changeDeleteText];
-
-					if ((actionName === 'delete') && masterBooking) {
-						content.push(
-							A.Lang.sub(
-								'<br/><br/><b>{0}</b>',
-								[Liferay.Language.get('deleting-this-event-will-cancel-the-meeting-with-your-guests')]
-							)
-						);
+						changeDeleteText = Liferay.Language.get('would-you-like-to-change-only-this-event-all-events-in-the-series-or-this-and-all-following-events-in-the-series');
 					}
 
 					var confirmationPanel = instance.confirmationPanel;
@@ -1104,7 +1093,7 @@
 						confirmationPanel = Liferay.Util.Window.getWindow(
 							{
 								dialog:	{
-									bodyContent: content.join(''),
+									bodyContent: changeDeleteText,
 									height: 200,
 									toolbars: {
 										footer: buttons
