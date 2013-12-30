@@ -49,7 +49,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.sanitizer.Sanitizer;
 import com.liferay.portal.kernel.sanitizer.SanitizerUtil;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
+import com.liferay.portal.kernel.util.CalendarUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -357,9 +359,14 @@ public class CalendarBookingLocalServiceImpl
 			calendarBookings.add(calendarBooking);
 		}
 
+		Date newStartDate = DateUtil.newDate(startTime);
+
 		for (CalendarBooking editingCalendarBooking : calendarBookings) {
 			if (allFollowing) {
-				if (startTime == editingCalendarBooking.getStartTime()) {
+				Date previousStartDate = DateUtil.newDate(
+					editingCalendarBooking.getStartTime());
+
+				if (CalendarUtil.equalsByDay(newStartDate, previousStartDate)) {
 					calendarBookingLocalService.deleteCalendarBooking(
 							editingCalendarBooking);
 
@@ -370,9 +377,12 @@ public class CalendarBookingLocalServiceImpl
 					recurrenceObj.setCount(0);
 				}
 
-				startTimeJCalendar.add(java.util.Calendar.DATE, -1);
+				java.util.Calendar endTimeJCalendar =
+					JCalendarUtil.getJCalendar(
+						startTime);
+				endTimeJCalendar.add(java.util.Calendar.DATE, -1);
 
-				recurrenceObj.setUntilJCalendar(startTimeJCalendar);
+				recurrenceObj.setUntilJCalendar(endTimeJCalendar);
 			}
 			else {
 				recurrenceObj.addExceptionDate(startTimeJCalendar);
