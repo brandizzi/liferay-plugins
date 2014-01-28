@@ -63,6 +63,7 @@ public class CalendarBookingWrapper implements CalendarBooking,
 		attributes.put("calendarId", getCalendarId());
 		attributes.put("calendarResourceId", getCalendarResourceId());
 		attributes.put("parentCalendarBookingId", getParentCalendarBookingId());
+		attributes.put("siblingCalendarBookingId", getSiblingCalendarBookingId());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("location", getLocation());
@@ -155,6 +156,13 @@ public class CalendarBookingWrapper implements CalendarBooking,
 
 		if (parentCalendarBookingId != null) {
 			setParentCalendarBookingId(parentCalendarBookingId);
+		}
+
+		Long siblingCalendarBookingId = (Long)attributes.get(
+				"siblingCalendarBookingId");
+
+		if (siblingCalendarBookingId != null) {
+			setSiblingCalendarBookingId(siblingCalendarBookingId);
 		}
 
 		String title = (String)attributes.get("title");
@@ -528,6 +536,26 @@ public class CalendarBookingWrapper implements CalendarBooking,
 	@Override
 	public void setParentCalendarBookingId(long parentCalendarBookingId) {
 		_calendarBooking.setParentCalendarBookingId(parentCalendarBookingId);
+	}
+
+	/**
+	* Returns the sibling calendar booking ID of this calendar booking.
+	*
+	* @return the sibling calendar booking ID of this calendar booking
+	*/
+	@Override
+	public long getSiblingCalendarBookingId() {
+		return _calendarBooking.getSiblingCalendarBookingId();
+	}
+
+	/**
+	* Sets the sibling calendar booking ID of this calendar booking.
+	*
+	* @param siblingCalendarBookingId the sibling calendar booking ID of this calendar booking
+	*/
+	@Override
+	public void setSiblingCalendarBookingId(long siblingCalendarBookingId) {
+		_calendarBooking.setSiblingCalendarBookingId(siblingCalendarBookingId);
 	}
 
 	/**

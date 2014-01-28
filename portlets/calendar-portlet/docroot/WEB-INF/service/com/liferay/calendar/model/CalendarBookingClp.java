@@ -108,6 +108,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 		attributes.put("calendarId", getCalendarId());
 		attributes.put("calendarResourceId", getCalendarResourceId());
 		attributes.put("parentCalendarBookingId", getParentCalendarBookingId());
+		attributes.put("siblingCalendarBookingId", getSiblingCalendarBookingId());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("location", getLocation());
@@ -203,6 +204,13 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 
 		if (parentCalendarBookingId != null) {
 			setParentCalendarBookingId(parentCalendarBookingId);
+		}
+
+		Long siblingCalendarBookingId = (Long)attributes.get(
+				"siblingCalendarBookingId");
+
+		if (siblingCalendarBookingId != null) {
+			setSiblingCalendarBookingId(siblingCalendarBookingId);
 		}
 
 		String title = (String)attributes.get("title");
@@ -582,6 +590,31 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 
 				method.invoke(_calendarBookingRemoteModel,
 					parentCalendarBookingId);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
+	}
+
+	@Override
+	public long getSiblingCalendarBookingId() {
+		return _siblingCalendarBookingId;
+	}
+
+	@Override
+	public void setSiblingCalendarBookingId(long siblingCalendarBookingId) {
+		_siblingCalendarBookingId = siblingCalendarBookingId;
+
+		if (_calendarBookingRemoteModel != null) {
+			try {
+				Class<?> clazz = _calendarBookingRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setSiblingCalendarBookingId",
+						long.class);
+
+				method.invoke(_calendarBookingRemoteModel,
+					siblingCalendarBookingId);
 			}
 			catch (Exception e) {
 				throw new UnsupportedOperationException(e);
@@ -1704,6 +1737,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 		clone.setCalendarId(getCalendarId());
 		clone.setCalendarResourceId(getCalendarResourceId());
 		clone.setParentCalendarBookingId(getParentCalendarBookingId());
+		clone.setSiblingCalendarBookingId(getSiblingCalendarBookingId());
 		clone.setTitle(getTitle());
 		clone.setDescription(getDescription());
 		clone.setLocation(getLocation());
@@ -1789,7 +1823,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(57);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1815,6 +1849,8 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 		sb.append(getCalendarResourceId());
 		sb.append(", parentCalendarBookingId=");
 		sb.append(getParentCalendarBookingId());
+		sb.append(", siblingCalendarBookingId=");
+		sb.append(getSiblingCalendarBookingId());
 		sb.append(", title=");
 		sb.append(getTitle());
 		sb.append(", description=");
@@ -1852,7 +1888,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(85);
+		StringBundler sb = new StringBundler(88);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.calendar.model.CalendarBooking");
@@ -1905,6 +1941,10 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 		sb.append(
 			"<column><column-name>parentCalendarBookingId</column-name><column-value><![CDATA[");
 		sb.append(getParentCalendarBookingId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>siblingCalendarBookingId</column-name><column-value><![CDATA[");
+		sb.append(getSiblingCalendarBookingId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>title</column-name><column-value><![CDATA[");
@@ -1985,6 +2025,7 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 	private long _calendarId;
 	private long _calendarResourceId;
 	private long _parentCalendarBookingId;
+	private long _siblingCalendarBookingId;
 	private String _title;
 	private String _titleCurrentLanguageId;
 	private String _description;

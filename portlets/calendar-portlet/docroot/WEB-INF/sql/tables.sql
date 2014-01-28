@@ -30,6 +30,7 @@ create table CalendarBooking (
 	calendarId LONG,
 	calendarResourceId LONG,
 	parentCalendarBookingId LONG,
+	siblingCalendarBookingId LONG,
 	title STRING null,
 	description STRING null,
 	location STRING null,
