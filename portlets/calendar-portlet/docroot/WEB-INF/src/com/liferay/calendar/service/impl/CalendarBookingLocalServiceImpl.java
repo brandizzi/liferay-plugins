@@ -56,6 +56,8 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -75,6 +77,7 @@ import com.liferay.portlet.trash.model.TrashEntry;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -162,7 +165,8 @@ public class CalendarBookingLocalServiceImpl
 		}
 
 		if (siblingCalendarBookingId > 0) {
-			calendarBooking.setSiblingCalendarBookingId(siblingCalendarBookingId);
+			calendarBooking.setSiblingCalendarBookingId(
+				siblingCalendarBookingId);
 		}
 		else {
 			calendarBooking.setSiblingCalendarBookingId(calendarBookingId);
@@ -809,26 +813,17 @@ public class CalendarBookingLocalServiceImpl
 
 		validate(titleMap, startTimeJCalendar, endTimeJCalendar);
 
-		calendarBooking.setGroupId(calendar.getGroupId());
-		calendarBooking.setCompanyId(user.getCompanyId());
-		calendarBooking.setUserId(user.getUserId());
-		calendarBooking.setUserName(user.getFullName());
-		calendarBooking.setModifiedDate(serviceContext.getModifiedDate(null));
-		calendarBooking.setCalendarId(calendarId);
-		calendarBooking.setTitleMap(titleMap);
-		calendarBooking.setDescriptionMap(descriptionMap);
-		calendarBooking.setLocation(location);
-		calendarBooking.setStartTime(startTimeJCalendar.getTimeInMillis());
-		calendarBooking.setEndTime(endTimeJCalendar.getTimeInMillis());
-		calendarBooking.setAllDay(allDay);
 		calendarBooking.setRecurrence(recurrence);
-		calendarBooking.setFirstReminder(firstReminder);
-		calendarBooking.setFirstReminderType(firstReminderType);
-		calendarBooking.setSecondReminder(secondReminder);
-		calendarBooking.setSecondReminderType(secondReminderType);
-		calendarBooking.setExpandoBridgeAttributes(serviceContext);
 
-		calendarBookingPersistence.update(calendarBooking);
+		Map<String, Object[]> updatedModelAttributes =
+			getUpdatedModelAttributes(
+				calendarBooking, calendarId, titleMap, descriptionMap, location,
+				startTime, endTime, allDay, firstReminder, firstReminderType,
+				secondReminder, secondReminderType);
+
+		updateSiblingCalendarBookings(
+			calendarBooking, user, calendar, updatedModelAttributes,
+			serviceContext);
 
 		addChildCalendarBookings(
 			calendarBooking, childCalendarIds, updateChildCalendars,
@@ -1298,6 +1293,179 @@ public class CalendarBookingLocalServiceImpl
 		jsonObject.put("title", calendarBooking.getTitle());
 
 		return jsonObject.toString();
+	}
+
+	protected Map<String, Object[]> getUpdatedModelAttributes(
+			CalendarBooking calendarBooking, long calendarId,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			String location, long startTime, long endTime, boolean allDay,
+			long firstReminder, String firstReminderType, long secondReminder,
+			String secondReminderType) {
+
+		Map<String, Object[]> updatedModelAttributes =
+			new HashMap<String, Object[]>();
+
+		if (calendarId != calendarBooking.getCalendarId()) {
+			updatedModelAttributes.put(
+				"calendarId",
+				new Object[] {calendarId, calendarBooking.getCalendarId()});
+		}
+
+		if (isFieldUpdated(calendarBooking.getTitleMap(), titleMap)) {
+			updatedModelAttributes.put(
+				"titleMap",
+				new Object[] {titleMap, calendarBooking.getTitleMap()});
+		}
+
+		if (isFieldUpdated(
+				calendarBooking.getDescriptionMap(), descriptionMap)) {
+
+			updatedModelAttributes.put(
+				"descriptionMap",
+				new Object[] {
+					descriptionMap, calendarBooking.getDescription()});
+		}
+
+		if (isFieldUpdated(calendarBooking.getLocation(), location)) {
+			updatedModelAttributes.put(
+				"location",
+				new Object[] {location, calendarBooking.getLocation()});
+		}
+
+		if (startTime != calendarBooking.getStartTime()) {
+			updatedModelAttributes.put(
+				"startTime",
+				new Object[] {startTime, calendarBooking.getStartTime()});
+		}
+
+		if (endTime != calendarBooking.getEndTime()) {
+			updatedModelAttributes.put(
+				"endTime",
+				new Object[] {endTime, calendarBooking.getEndTime()});
+		}
+
+		if (allDay != calendarBooking.isAllDay()) {
+			updatedModelAttributes.put(
+				"allDay",
+				new Object[] {allDay, calendarBooking.isAllDay()});
+		}
+
+		if (firstReminder != calendarBooking.getFirstReminder()) {
+			updatedModelAttributes.put(
+				"firstReminder",
+				new Object[] {
+					firstReminder, calendarBooking.getFirstReminderType()});
+		}
+
+		if (isFieldUpdated(
+				calendarBooking.getFirstReminderType(), firstReminderType)) {
+
+			updatedModelAttributes.put(
+				"firstReminderType",
+				new Object[] {
+					firstReminderType, calendarBooking.getFirstReminderType()});
+		}
+
+		if (secondReminder != calendarBooking.getSecondReminder()) {
+			updatedModelAttributes.put(
+				"secondReminder",
+				new Object[] {
+					secondReminder, calendarBooking.getSecondReminder()});
+		}
+
+		if (isFieldUpdated(
+				calendarBooking.getSecondReminderType(), secondReminderType)) {
+
+			updatedModelAttributes.put(
+				"secondReminderType",
+				new Object[] {
+					secondReminderType,
+					calendarBooking.getSecondReminderType()});
+		}
+
+		return updatedModelAttributes;
+	}
+
+	protected boolean isFieldUpdated(Object oldValue, Object newValue) {
+		if (Validator.isNull(newValue)) {
+			return Validator.isNotNull(oldValue);
+		}
+
+		if (oldValue instanceof Map && newValue instanceof Map) {
+			Map<Locale, String> newMap = (Map<Locale, String>)newValue;
+			Map<Locale, String> oldMap = (Map<Locale, String>)oldValue;
+
+			for (Locale key : newMap.keySet()) {
+				if (isFieldUpdated(oldMap.get(key), newMap.get(key))) {
+					return true;
+				}
+			}
+		}
+
+		return (newValue != oldValue) && !newValue.equals(oldValue);
+	}
+
+	protected void updateSiblingCalendarBookings(
+			CalendarBooking calendarBooking, User user, Calendar calendar,
+			Map<String, Object[]> updatedModelAttributes,
+			ServiceContext serviceContext)
+		throws SystemException {
+
+		long calendarBookingId = calendarBooking.getCalendarBookingId();
+		Map<String, Object> modelAttributes =
+				calendarBooking.getModelAttributes();
+
+		for (String key : updatedModelAttributes.keySet()) {
+			Object[] values = updatedModelAttributes.get(key);
+			Object newValue = values[0];
+			Object oldValue = values[1];
+			Object currentValue = modelAttributes.get(key);
+
+			if (key.endsWith("Map")) {
+				key = key.substring(0, key.length() - 3);
+				currentValue = LocalizationUtil.getLocalizationMap(
+					(String)modelAttributes.get(key));
+			}
+
+			if (!isFieldUpdated(currentValue, oldValue)) {
+				if (newValue instanceof Map) {
+					newValue = LocalizationUtil.updateLocalization(
+						(Map<Locale, String>)newValue,
+						(String)modelAttributes.get(key),
+						Character.toUpperCase(key.charAt(0)) + key.substring(1),
+						LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault()));
+				}
+
+				modelAttributes.put(key, newValue);
+			}
+		}
+
+		calendarBooking.setModelAttributes(modelAttributes);
+
+		calendarBooking.setGroupId(calendar.getGroupId());
+		calendarBooking.setCompanyId(user.getCompanyId());
+		calendarBooking.setUserId(user.getUserId());
+		calendarBooking.setUserName(user.getFullName());
+		calendarBooking.setModifiedDate(serviceContext.getModifiedDate(null));
+		calendarBooking.setExpandoBridgeAttributes(serviceContext);
+
+		calendarBookingPersistence.update(calendarBooking);
+
+		List<CalendarBooking> siblingCalendarBookings =
+			calendarBookingPersistence.findBySiblingCalendarBookingId(
+				calendarBookingId);
+
+		for (CalendarBooking siblingCalendarBooking : siblingCalendarBookings) {
+			if (siblingCalendarBooking.getCalendarBookingId() ==
+					calendarBookingId) {
+
+				continue;
+			}
+
+			updateSiblingCalendarBookings(
+				siblingCalendarBooking, user, calendar, updatedModelAttributes,
+				serviceContext);
+		}
 	}
 
 	protected void validate(
