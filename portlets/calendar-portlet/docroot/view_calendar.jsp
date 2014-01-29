@@ -179,6 +179,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 	Liferay.CalendarUtil.INVITEES_URL = '<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="calendarBookingInvitees" />';
 	Liferay.CalendarUtil.RENDERING_RULES_URL = '<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="calendarRenderingRules" />';
+	Liferay.CalendarUtil.RESOURCE_CALENDARS_URL = '<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="resourceCalendars"><liferay-portlet:param name="calendarResourceId" value="{calendarResourceId}" /></liferay-portlet:resourceURL>';
 
 	<c:if test="<%= defaultCalendar != null %>">
 		Liferay.CalendarUtil.DEFAULT_USER_CALENDAR_ID = <%= defaultCalendar.getCalendarId() %>;
