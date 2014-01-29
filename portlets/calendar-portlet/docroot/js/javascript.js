@@ -100,6 +100,7 @@ AUI.add(
 			NOTIFICATION_DEFAULT_TYPE: 'email',
 			PORTLET_NAMESPACE: STR_BLANK,
 			RENDERING_RULES_URL: null,
+			RESOURCE_CALENDARS_URL: null,
 			USER_TIMEZONE_OFFSET: 0,
 
 			availableCalendars: {},
@@ -378,6 +379,29 @@ AUI.add(
 
 				A.io.request(
 					renderingRulesURL,
+					{
+						dataType: 'json',
+						on: {
+							success: function() {
+								callback(this.get('responseData'));
+							}
+						}
+					}
+				);
+			},
+
+			getResourceCalendars: function(calendarResourceId, callback) {
+				var instance = this;
+
+				var resourceCalendarsURL = Lang.sub(
+					decodeURIComponent(instance.RESOURCE_CALENDARS_URL),
+					{
+						calendarResourceId: calendarResourceId
+					}
+				);
+
+				A.io.request(
+					resourceCalendarsURL,
 					{
 						dataType: 'json',
 						on: {
