@@ -394,6 +394,7 @@ String backURL = PortalUtil.getCurrentURL(request);
 			window.<portlet:namespace />calendarListsMenu.setAttrs(
 				{
 					alignNode: currentTarget,
+					host: window['<portlet:namespace />' + target.getAttribute('data-prefix') + 'CalendarList'],
 					visible: !window.<portlet:namespace />calendarListsMenu.get('visible')
 				}
 			);
