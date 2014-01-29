@@ -43,7 +43,18 @@ String backURL = PortalUtil.getCurrentURL(request);
 									dialog: {
 										after: {
 											destroy: function(event) {
-												scheduler.load();
+												var host = instance.get('host');
+
+												Liferay.CalendarUtil.getResourceCalendars(
+													calendarResourceId,
+													function(calendars) {
+														host.set('calendars', calendars);
+
+														<portlet:namespace />syncCalendarsMap();
+
+														<portlet:namespace />scheduler.load();
+													}
+												);
 											}
 										},
 										destroyOnHide: true,
