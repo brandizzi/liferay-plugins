@@ -127,7 +127,7 @@ String backURL = PortalUtil.getCurrentURL(request);
 							dialog: {
 								after: {
 									destroy: function(event) {
-										scheduler.load();
+										<portlet:namespace />scheduler.load();
 									}
 								},
 								destroyOnHide: true,
@@ -232,7 +232,7 @@ String backURL = PortalUtil.getCurrentURL(request);
 							dialog: {
 								after: {
 									destroy: function(event) {
-										scheduler.load();
+										<portlet:namespace />scheduler.load();
 									}
 								},
 								destroyOnHide: true,
