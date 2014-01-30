@@ -253,23 +253,33 @@ String backURL = PortalUtil.getCurrentURL(request);
 
 					var activeCalendar = calendarList.activeItem;
 
-					if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
-						Liferay.CalendarUtil.deleteCalendar(
-							activeCalendar.get('calendarId'),
-							function() {
-								Liferay.CalendarUtil.getResourceCalendars(
-									activeCalendar.get('calendarResourceId'),
-									function(calendars) {
-										calendarList.set('calendars', calendars);
+					Liferay.CalendarMessageUtil.confirm(
+						'<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />',
+						Liferay.Language.get('continue'),
+						Liferay.Language.get('dont-delete-calendar'),
+						function() {
+							Liferay.CalendarUtil.deleteCalendar(
+								activeCalendar.get('calendarId'),
+								function() {
+									Liferay.CalendarUtil.getResourceCalendars(
+										activeCalendar.get('calendarResourceId'),
+										function(calendars) {
+											calendarList.set('calendars', calendars);
 
-										<portlet:namespace />syncCalendarsMap();
+											<portlet:namespace />syncCalendarsMap();
 
-										<portlet:namespace />scheduler.load();
-									}
-								);
-							}
-						);
-					}
+											<portlet:namespace />scheduler.load();
+										}
+									);
+								}
+							);
+
+							this.hide();
+						},
+						function() {
+							this.hide();
+						}
+					);
 				},
 				id: 'delete'
 			},
