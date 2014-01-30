@@ -1421,22 +1421,44 @@ public class CalendarBookingLocalServiceImpl
 			Object oldValue = values[1];
 			Object currentValue = modelAttributes.get(key);
 
-			if (key.endsWith("Map")) {
-				key = key.substring(0, key.length() - 3);
-				currentValue = LocalizationUtil.getLocalizationMap(
-					(String)modelAttributes.get(key));
-			}
+			if (key.equals("startTime") || key.equals("endTime")) {
+				java.util.Calendar oldJCalendar = JCalendarUtil.getJCalendar(
+					(Long)oldValue);
+				java.util.Calendar newJCalendar = JCalendarUtil.getJCalendar(
+					(Long)newValue);
 
-			if (!isFieldUpdated(currentValue, oldValue)) {
-				if (newValue instanceof Map) {
-					newValue = LocalizationUtil.updateLocalization(
-						(Map<Locale, String>)newValue,
-						(String)modelAttributes.get(key),
-						Character.toUpperCase(key.charAt(0)) + key.substring(1),
-						LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault()));
+				if (JCalendarUtil.isDayTimeEqual(oldJCalendar, newJCalendar)) {
+					newJCalendar.set(
+						java.util.Calendar.DAY_OF_MONTH,
+						oldJCalendar.get(java.util.Calendar.DAY_OF_MONTH));
+					newJCalendar.set(
+							java.util.Calendar.MONTH,
+							oldJCalendar.get(java.util.Calendar.MONTH));
+					newJCalendar.set(
+							java.util.Calendar.YEAR,
+							oldJCalendar.get(java.util.Calendar.YEAR));
+
+					modelAttributes.put(key, newJCalendar.getTimeInMillis());
+				}
+			}
+			else {
+				if (key.endsWith("Map")) {
+					key = key.substring(0, key.length() - 3);
+					currentValue = LocalizationUtil.getLocalizationMap(
+						(String)modelAttributes.get(key));
 				}
 
-				modelAttributes.put(key, newValue);
+				if (!isFieldUpdated(currentValue, oldValue)) {
+					if (newValue instanceof Map) {
+						newValue = LocalizationUtil.updateLocalization(
+							(Map<Locale, String>)newValue,
+							(String)modelAttributes.get(key),
+							Character.toUpperCase(key.charAt(0)) + key.substring(1),
+							LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault()));
+					}
+
+					modelAttributes.put(key, newValue);
+				}
 			}
 		}
 

@@ -92,6 +92,25 @@ public class JCalendarUtil {
 		return offset;
 	}
 
+	public static boolean isDayTimeEqual(
+		Calendar calendar1, Calendar calendar2) {
+
+		return isFieldEqual(calendar1, calendar2, Calendar.HOUR_OF_DAY) &&
+				isFieldEqual(calendar1, calendar2, Calendar.MINUTE);
+	}
+
+	public static boolean isDayTimeEqual(long time1, long time2) {
+		Calendar calendar1 = getJCalendar(time1);
+		Calendar calendar2 = getJCalendar(time2);
+
+		return isDayTimeEqual(calendar1, calendar2);
+	}
+
+	public static boolean isFieldEqual(java.util.Calendar calendar1,
+			java.util.Calendar calendar2, int field) {
+		return calendar1.get(field) == calendar2.get(field);
+	}
+
 	public static Calendar toLastHourJCalendar(Calendar jCalendar) {
 		Calendar lastHourJCalendar = (Calendar)jCalendar.clone();
 
