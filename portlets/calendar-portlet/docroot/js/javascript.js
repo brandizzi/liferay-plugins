@@ -21,6 +21,22 @@ AUI.add(
 			}
 		);
 
+		A.mix(A.DataType.DateMath, {
+			getDSTTimezoneOffset: function(date) {
+				var january = new Date(date.getFullYear(), 0, 1);
+				var july = new Date(date.getFullYear(), 6, 1);
+
+				var dstTimezoneOffset = Math.max(january.getTimezoneOffset(), july.getTimezoneOffset());
+
+				if (date.getTimezoneOffset() < dstTimezoneOffset) {
+					return dstTimezoneOffset;
+				}
+				else {
+					return 0;
+				}
+			}
+		});
+
 		var toInt = function(value) {
 			return Lang.toInt(value, 10, 0);
 		};
@@ -656,7 +672,9 @@ AUI.add(
 
 				var date = instance.toLocalTimeWithoutUserTimeZone(utc);
 
-				return DateMath.add(date, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
+				var timezoneOffset = instance.USER_TIMEZONE_OFFSET + DateMath.getDSTTimezoneOffset(date);
+
+				return DateMath.add(date, DateMath.MINUTES, timezoneOffset / DateMath.ONE_MINUTE_MS);
 			},
 
 			toLocalTimeWithoutUserTimeZone: function(utc) {
@@ -674,7 +692,9 @@ AUI.add(
 
 				var utc = instance.toUTCWithoutUserTimeZone(date);
 
-				return DateMath.subtract(utc, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
+				var timezoneOffset = instance.USER_TIMEZONE_OFFSET + DateMath.getDSTTimezoneOffset(utc);
+
+				return DateMath.subtract(utc, DateMath.MINUTES, timezoneOffset / DateMath.ONE_MINUTE_MS);
 			},
 
 			toUTCWithoutUserTimeZone: function(date) {
