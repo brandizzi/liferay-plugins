@@ -98,6 +98,7 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 		attributes.put("color", getColor());
+		attributes.put("timeZoneId", getTimeZoneId());
 		attributes.put("defaultCalendar", getDefaultCalendar());
 		attributes.put("enableComments", getEnableComments());
 		attributes.put("enableRatings", getEnableRatings());
@@ -186,6 +187,12 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 
 		if (color != null) {
 			setColor(color);
+		}
+
+		String timeZoneId = (String)attributes.get("timeZoneId");
+
+		if (timeZoneId != null) {
+			setTimeZoneId(timeZoneId);
 		}
 
 		Boolean defaultCalendar = (Boolean)attributes.get("defaultCalendar");
@@ -723,6 +730,29 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 	}
 
 	@Override
+	public String getTimeZoneId() {
+		return _timeZoneId;
+	}
+
+	@Override
+	public void setTimeZoneId(String timeZoneId) {
+		_timeZoneId = timeZoneId;
+
+		if (_calendarRemoteModel != null) {
+			try {
+				Class<?> clazz = _calendarRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setTimeZoneId", String.class);
+
+				method.invoke(_calendarRemoteModel, timeZoneId);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
+	}
+
+	@Override
 	public boolean getDefaultCalendar() {
 		return _defaultCalendar;
 	}
@@ -806,6 +836,25 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 			catch (Exception e) {
 				throw new UnsupportedOperationException(e);
 			}
+		}
+	}
+
+	@Override
+	public java.util.TimeZone getTimeZone() {
+		try {
+			String methodName = "getTimeZone";
+
+			Class<?>[] parameterTypes = new Class<?>[] {  };
+
+			Object[] parameterValues = new Object[] {  };
+
+			java.util.TimeZone returnObj = (java.util.TimeZone)invokeOnRemoteModel(methodName,
+					parameterTypes, parameterValues);
+
+			return returnObj;
+		}
+		catch (Exception e) {
+			throw new UnsupportedOperationException(e);
 		}
 	}
 
@@ -989,6 +1038,7 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 		clone.setName(getName());
 		clone.setDescription(getDescription());
 		clone.setColor(getColor());
+		clone.setTimeZoneId(getTimeZoneId());
 		clone.setDefaultCalendar(getDefaultCalendar());
 		clone.setEnableComments(getEnableComments());
 		clone.setEnableRatings(getEnableRatings());
@@ -1048,7 +1098,7 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(35);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1076,6 +1126,8 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 		sb.append(getDescription());
 		sb.append(", color=");
 		sb.append(getColor());
+		sb.append(", timeZoneId=");
+		sb.append(getTimeZoneId());
 		sb.append(", defaultCalendar=");
 		sb.append(getDefaultCalendar());
 		sb.append(", enableComments=");
@@ -1089,7 +1141,7 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(52);
+		StringBundler sb = new StringBundler(55);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.calendar.model.Calendar");
@@ -1148,6 +1200,10 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 		sb.append(getColor());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>timeZoneId</column-name><column-value><![CDATA[");
+		sb.append(getTimeZoneId());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>defaultCalendar</column-name><column-value><![CDATA[");
 		sb.append(getDefaultCalendar());
 		sb.append("]]></column-value></column>");
@@ -1181,6 +1237,7 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 	private String _description;
 	private String _descriptionCurrentLanguageId;
 	private int _color;
+	private String _timeZoneId;
 	private boolean _defaultCalendar;
 	private boolean _enableComments;
 	private boolean _enableRatings;

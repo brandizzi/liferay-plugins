@@ -12,6 +12,7 @@ create table Calendar (
 	name STRING null,
 	description STRING null,
 	color INTEGER,
+	timeZoneId VARCHAR(75) null,
 	defaultCalendar BOOLEAN,
 	enableComments BOOLEAN,
 	enableRatings BOOLEAN

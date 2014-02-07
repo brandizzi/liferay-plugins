@@ -452,6 +452,21 @@ public interface CalendarModel extends BaseModel<Calendar>, StagedGroupedModel {
 	public void setColor(int color);
 
 	/**
+	 * Returns the time zone ID of this calendar.
+	 *
+	 * @return the time zone ID of this calendar
+	 */
+	@AutoEscape
+	public String getTimeZoneId();
+
+	/**
+	 * Sets the time zone ID of this calendar.
+	 *
+	 * @param timeZoneId the time zone ID of this calendar
+	 */
+	public void setTimeZoneId(String timeZoneId);
+
+	/**
 	 * Returns the default calendar of this calendar.
 	 *
 	 * @return the default calendar of this calendar

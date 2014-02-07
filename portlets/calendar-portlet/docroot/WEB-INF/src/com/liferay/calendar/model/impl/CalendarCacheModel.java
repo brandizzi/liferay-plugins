@@ -37,7 +37,7 @@ import java.util.Date;
 public class CalendarCacheModel implements CacheModel<Calendar>, Externalizable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(35);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -65,6 +65,8 @@ public class CalendarCacheModel implements CacheModel<Calendar>, Externalizable 
 		sb.append(description);
 		sb.append(", color=");
 		sb.append(color);
+		sb.append(", timeZoneId=");
+		sb.append(timeZoneId);
 		sb.append(", defaultCalendar=");
 		sb.append(defaultCalendar);
 		sb.append(", enableComments=");
@@ -131,6 +133,14 @@ public class CalendarCacheModel implements CacheModel<Calendar>, Externalizable 
 		}
 
 		calendarImpl.setColor(color);
+
+		if (timeZoneId == null) {
+			calendarImpl.setTimeZoneId(StringPool.BLANK);
+		}
+		else {
+			calendarImpl.setTimeZoneId(timeZoneId);
+		}
+
 		calendarImpl.setDefaultCalendar(defaultCalendar);
 		calendarImpl.setEnableComments(enableComments);
 		calendarImpl.setEnableRatings(enableRatings);
@@ -155,6 +165,7 @@ public class CalendarCacheModel implements CacheModel<Calendar>, Externalizable 
 		name = objectInput.readUTF();
 		description = objectInput.readUTF();
 		color = objectInput.readInt();
+		timeZoneId = objectInput.readUTF();
 		defaultCalendar = objectInput.readBoolean();
 		enableComments = objectInput.readBoolean();
 		enableRatings = objectInput.readBoolean();
@@ -202,6 +213,14 @@ public class CalendarCacheModel implements CacheModel<Calendar>, Externalizable 
 		}
 
 		objectOutput.writeInt(color);
+
+		if (timeZoneId == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(timeZoneId);
+		}
+
 		objectOutput.writeBoolean(defaultCalendar);
 		objectOutput.writeBoolean(enableComments);
 		objectOutput.writeBoolean(enableRatings);
@@ -220,6 +239,7 @@ public class CalendarCacheModel implements CacheModel<Calendar>, Externalizable 
 	public String name;
 	public String description;
 	public int color;
+	public String timeZoneId;
 	public boolean defaultCalendar;
 	public boolean enableComments;
 	public boolean enableRatings;
