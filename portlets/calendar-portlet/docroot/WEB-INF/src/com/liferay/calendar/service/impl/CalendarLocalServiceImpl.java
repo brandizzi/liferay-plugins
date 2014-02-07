@@ -53,6 +53,23 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 			boolean enableRatings, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
+		User user = userLocalService.getUser(userId);
+
+		return calendarLocalService.addCalendar(
+			userId, groupId, calendarResourceId, nameMap, descriptionMap, color,
+			user.getTimeZoneId(), defaultCalendar, enableComments,
+			enableRatings, serviceContext);
+	}
+
+	@Override
+	public Calendar addCalendar(
+			long userId, long groupId, long calendarResourceId,
+			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
+			int color, String timeZoneId, boolean defaultCalendar,
+			boolean enableComments, boolean enableRatings,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
 		// Calendar
 
 		User user = userPersistence.findByPrimaryKey(userId);
@@ -80,6 +97,7 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 		calendar.setNameMap(nameMap);
 		calendar.setDescriptionMap(descriptionMap);
 		calendar.setColor(color);
+		calendar.setTimeZoneId(timeZoneId);
 		calendar.setDefaultCalendar(defaultCalendar);
 		calendar.setEnableComments(enableComments);
 		calendar.setEnableRatings(enableRatings);

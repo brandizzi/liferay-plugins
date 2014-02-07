@@ -58,6 +58,24 @@ public class CalendarServiceImpl extends CalendarServiceBaseImpl {
 	}
 
 	@Override
+	public Calendar addCalendar(
+			long groupId, long calendarResourceId, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap, int color, String timeZoneId,
+			boolean defaultCalendar, boolean enableComments,
+			boolean enableRatings, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		CalendarResourcePermission.check(
+			getPermissionChecker(), calendarResourceId,
+			ActionKeys.ADD_CALENDAR);
+
+		return calendarLocalService.addCalendar(
+			getUserId(), groupId, calendarResourceId, nameMap, descriptionMap,
+			color, timeZoneId, defaultCalendar, enableComments, enableRatings,
+			serviceContext);
+	}
+
+	@Override
 	public Calendar deleteCalendar(long calendarId)
 		throws PortalException, SystemException {
 
