@@ -25,6 +25,7 @@ import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.service.CalendarResourceLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
@@ -56,6 +57,18 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 
 		return CalendarBookingLocalServiceUtil.getChildCalendarBookings(
 			getCalendarBookingId());
+	}
+
+	@JSON
+	@Override
+	public long getDisplayEndTime() {
+		return _displayEndTime;
+	}
+
+	@JSON
+	@Override
+	public long getDisplayStartTime() {
+		return _displayStartTime;
 	}
 
 	@Override
@@ -108,6 +121,18 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 		return false;
 	}
 
+	@Override
+	public void setDisplayEndTime(long displayEndTime) {
+		this._displayEndTime = displayEndTime;
+	}
+
+	@Override
+	public void setDisplayStartTime(long displayStartTime) {
+		this._displayStartTime = displayStartTime;
+	}
+
+	private long _displayEndTime;
+	private long _displayStartTime;
 	private Recurrence _recurrenceObj;
 
 }
