@@ -14,12 +14,14 @@
 
 package com.liferay.calendar.util;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -80,16 +82,48 @@ public class JCalendarUtil {
 		return jCalendar;
 	}
 
-	public static int getTimeZoneOffset(TimeZone timeZone) {
-		int offset = timeZone.getRawOffset();
+	public static Calendar getTZRealTime(
+		Calendar calendar, TimeZone simulatedTimeZone) {
 
-		boolean inDaylightTime = timeZone.inDaylightTime(new Date());
+		Calendar simulatingCalendar = getJCalendar(
+			calendar.getTimeInMillis(), TimeZoneUtil.GMT);
 
-		if (inDaylightTime) {
-			offset += timeZone.getDSTSavings();
-		}
+		Calendar realJCalendar = getJCalendar(
+			simulatingCalendar.get(Calendar.YEAR),
+			simulatingCalendar.get(Calendar.MONTH),
+			simulatingCalendar.get(Calendar.DAY_OF_MONTH),
+			simulatingCalendar.get(Calendar.HOUR_OF_DAY),
+			simulatingCalendar.get(Calendar.MINUTE),
+			simulatingCalendar.get(Calendar.SECOND),
+			simulatingCalendar.get(Calendar.MILLISECOND), simulatedTimeZone);
 
-		return offset;
+		return getJCalendar(realJCalendar.getTimeInMillis(), TimeZoneUtil.GMT);
+	}
+
+	public static Calendar getTZRealTime(
+		long time, TimeZone simulatedTimeZone) {
+
+		return getTZRealTime(getJCalendar(time), simulatedTimeZone);
+	}
+
+	public static Calendar getTZSimulatingTime(
+		Calendar calendar, TimeZone simulatedTimeZone) {
+
+		Calendar localizedJCalendar = getJCalendar(
+			calendar.getTimeInMillis(), simulatedTimeZone);
+
+		return getJCalendar(
+			localizedJCalendar.get(Calendar.YEAR),
+			localizedJCalendar.get(Calendar.MONTH),
+			localizedJCalendar.get(Calendar.DAY_OF_MONTH),
+			localizedJCalendar.get(Calendar.HOUR_OF_DAY),
+			localizedJCalendar.get(Calendar.MINUTE),
+			localizedJCalendar.get(Calendar.SECOND),
+			localizedJCalendar.get(Calendar.MILLISECOND), TimeZoneUtil.GMT);
+	}
+
+	public static Calendar getTZSimulatingTime(long time, TimeZone timeZone) {
+		return getTZSimulatingTime(getJCalendar(time), timeZone);
 	}
 
 	public static Calendar toLastHourJCalendar(Calendar jCalendar) {
@@ -113,6 +147,9 @@ public class JCalendarUtil {
 
 		return midnightJCalendar;
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(
+		JCalendarUtil.class.getName());
 
 	private static TimeZone _utcTimeZone = TimeZone.getTimeZone(StringPool.UTC);
 
