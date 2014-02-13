@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -38,6 +37,23 @@ public class JCalendarUtil {
 	public static final long MONTH = Time.DAY * 30;
 
 	public static final long SECOND = 1000;
+
+	public static long fromDisplayCalendar(
+		long time, TimeZone displayTimeZone) {
+
+		Calendar displayJCalendar = getJCalendar(time, _utcTimeZone);
+
+		Calendar jCalendar = getJCalendar(
+			displayJCalendar.get(Calendar.YEAR),
+			displayJCalendar.get(Calendar.MONTH),
+			displayJCalendar.get(Calendar.DAY_OF_MONTH),
+			displayJCalendar.get(Calendar.HOUR_OF_DAY),
+			displayJCalendar.get(Calendar.MINUTE),
+			displayJCalendar.get(Calendar.SECOND),
+			displayJCalendar.get(Calendar.MILLISECOND), displayTimeZone);
+
+		return jCalendar.getTimeInMillis();
+	}
 
 	public static long getDaysBetween(
 		Calendar startTimeJCalendar, Calendar endTimeJCalendar) {
@@ -80,16 +96,17 @@ public class JCalendarUtil {
 		return jCalendar;
 	}
 
-	public static int getTimeZoneOffset(TimeZone timeZone) {
-		int offset = timeZone.getRawOffset();
+	public static long toDisplayCalendar(long time, TimeZone displayTimeZone) {
+		Calendar jCalendar = getJCalendar(time, displayTimeZone);
 
-		boolean inDaylightTime = timeZone.inDaylightTime(new Date());
+		Calendar displayJCalendar = getJCalendar(
+			jCalendar.get(Calendar.YEAR), jCalendar.get(Calendar.MONTH),
+			jCalendar.get(Calendar.DAY_OF_MONTH),
+			jCalendar.get(Calendar.HOUR_OF_DAY), jCalendar.get(Calendar.MINUTE),
+			jCalendar.get(Calendar.SECOND), jCalendar.get(Calendar.MILLISECOND),
+			_utcTimeZone);
 
-		if (inDaylightTime) {
-			offset += timeZone.getDSTSavings();
-		}
-
-		return offset;
+		return displayJCalendar.getTimeInMillis();
 	}
 
 	public static Calendar toLastHourJCalendar(Calendar jCalendar) {
