@@ -1402,6 +1402,16 @@ public class CalendarBookingWrapper implements CalendarBooking,
 	}
 
 	@Override
+	public long getDisplayEndTime() {
+		return _calendarBooking.getDisplayEndTime();
+	}
+
+	@Override
+	public long getDisplayStartTime() {
+		return _calendarBooking.getDisplayStartTime();
+	}
+
+	@Override
 	public long getDuration() {
 		return _calendarBooking.getDuration();
 	}
@@ -1436,6 +1446,16 @@ public class CalendarBookingWrapper implements CalendarBooking,
 	@Override
 	public boolean isRecurring() {
 		return _calendarBooking.isRecurring();
+	}
+
+	@Override
+	public void setDisplayEndTime(long displayEndTime) {
+		_calendarBooking.setDisplayEndTime(displayEndTime);
+	}
+
+	@Override
+	public void setDisplayStartTime(long displayStartTime) {
+		_calendarBooking.setDisplayStartTime(displayStartTime);
 	}
 
 	@Override

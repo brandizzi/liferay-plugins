@@ -64,6 +64,7 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.social.model.SocialActivityConstants;
@@ -75,6 +76,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * @author Eduardo Lundgren
@@ -200,6 +202,8 @@ public class CalendarBookingLocalServiceImpl
 		calendarBookingApprovalWorkflow.startWorkflow(
 			userId, calendarBooking, serviceContext);
 
+		setDisplayDates(calendarBooking);
+
 		return calendarBooking;
 	}
 
@@ -297,6 +301,8 @@ public class CalendarBookingLocalServiceImpl
 			CalendarBooking.class.getName(),
 			calendarBooking.getCalendarBookingId());
 
+		setDisplayDates(calendarBooking);
+
 		return calendarBooking;
 	}
 
@@ -389,14 +395,24 @@ public class CalendarBookingLocalServiceImpl
 	public CalendarBooking fetchCalendarBooking(String uuid, long groupId)
 		throws SystemException {
 
-		return calendarBookingPersistence.fetchByUUID_G(uuid, groupId);
+		CalendarBooking calendarBooking =
+			calendarBookingPersistence.fetchByUUID_G(uuid, groupId);
+
+		setDisplayDates(calendarBooking);
+
+		return calendarBooking;
 	}
 
 	@Override
 	public CalendarBooking getCalendarBooking(long calendarBookingId)
 		throws PortalException, SystemException {
 
-		return calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+		CalendarBooking calendarBooking =
+			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+
+		setDisplayDates(calendarBooking);
+
+		return calendarBooking;
 	}
 
 	@Override
@@ -404,15 +420,24 @@ public class CalendarBookingLocalServiceImpl
 			long calendarId, long parentCalendarBookingId)
 		throws PortalException, SystemException {
 
-		return calendarBookingPersistence.findByC_P(
-			calendarId, parentCalendarBookingId);
+		CalendarBooking calendarBooking = calendarBookingPersistence.findByC_P(
+				calendarId, parentCalendarBookingId);
+
+		setDisplayDates(calendarBooking);
+
+		return calendarBooking;
 	}
 
 	@Override
 	public List<CalendarBooking> getCalendarBookings(long calendarId)
 		throws SystemException {
 
-		return calendarBookingPersistence.findByCalendarId(calendarId);
+		List<CalendarBooking> calendarBookings =
+				calendarBookingPersistence.findByCalendarId(calendarId);
+
+		setDisplayDates(calendarBookings);
+
+		return calendarBookings;
 	}
 
 	@Override
@@ -1103,6 +1128,39 @@ public class CalendarBookingLocalServiceImpl
 		jsonObject.put("title", calendarBooking.getTitle());
 
 		return jsonObject.toString();
+	}
+
+	protected void setDisplayDates(CalendarBooking calendarBooking) {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+		long userId = serviceContext.getUserId();
+
+		if (userId <= 0) {
+			return;
+		}
+
+		try {
+			User user = userLocalService.getUser(userId);
+			TimeZone timeZone = TimeZone.getTimeZone(user.getTimeZoneId());
+
+			long displayStartTime = JCalendarUtil.getTZSimulatingTime(
+				calendarBooking.getStartTime(), timeZone);
+			long displayEndTime = JCalendarUtil.getTZSimulatingTime(
+					calendarBooking.getEndTime(), timeZone);
+
+			calendarBooking.setDisplayStartTime(displayStartTime);
+			calendarBooking.setDisplayEndTime(displayEndTime);
+		} catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("User with id " + userId + " not found", e);
+			}
+		}
+	}
+
+	protected void setDisplayDates(List<CalendarBooking> calendarBookings) {
+		for (CalendarBooking calendarBooking : calendarBookings) {
+			setDisplayDates(calendarBooking);
+		}
 	}
 
 	protected void validate(

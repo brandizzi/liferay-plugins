@@ -14,9 +14,12 @@
 
 package com.liferay.calendar.util;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -81,15 +84,46 @@ public class JCalendarUtil {
 	}
 
 	public static int getTimeZoneOffset(TimeZone timeZone) {
+		return getTimeZoneOffset(timeZone, new Date());
+	}
+
+	public static int getTimeZoneOffset(TimeZone timeZone, Date date) {
 		int offset = timeZone.getRawOffset();
 
-		boolean inDaylightTime = timeZone.inDaylightTime(new Date());
+		boolean inDaylightTime = timeZone.inDaylightTime(date);
 
 		if (inDaylightTime) {
 			offset += timeZone.getDSTSavings();
 		}
 
 		return offset;
+	}
+
+	public static int getTimeZoneOffset(TimeZone timeZone, long time) {
+		return getTimeZoneOffset(timeZone, new Date(time));
+	}
+
+	public static Calendar getTZSimulatingTime(
+		Calendar calendar, TimeZone simulatedTimeZone) {
+
+		Calendar localizedJCalendar = getJCalendar(
+			calendar.getTimeInMillis(), simulatedTimeZone);
+
+		return getJCalendar(
+			localizedJCalendar.get(Calendar.YEAR),
+			localizedJCalendar.get(Calendar.MONTH),
+			localizedJCalendar.get(Calendar.DAY_OF_MONTH),
+			localizedJCalendar.get(Calendar.HOUR_OF_DAY),
+			localizedJCalendar.get(Calendar.MINUTE),
+			localizedJCalendar.get(Calendar.SECOND),
+			localizedJCalendar.get(Calendar.MILLISECOND), TimeZoneUtil.GMT);
+	}
+
+	public static long getTZSimulatingTime(long time, TimeZone timeZone) {
+		Calendar simulatingTime = getTZSimulatingTime(
+			getJCalendar(time), timeZone);
+
+		return simulatingTime.getTimeInMillis();
 	}
 
 	public static Calendar toLastHourJCalendar(Calendar jCalendar) {
@@ -116,4 +150,5 @@ public class JCalendarUtil {
 
 	private static TimeZone _utcTimeZone = TimeZone.getTimeZone(StringPool.UTC);
 
+	private static Log _log = LogFactoryUtil.getLog(JCalendarUtil.class.getName());
 }

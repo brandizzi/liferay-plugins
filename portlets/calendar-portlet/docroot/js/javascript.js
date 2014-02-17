@@ -100,7 +100,7 @@ AUI.add(
 			NOTIFICATION_DEFAULT_TYPE: 'email',
 			PORTLET_NAMESPACE: STR_BLANK,
 			RENDERING_RULES_URL: null,
-			USER_TIMEZONE_OFFSET: 0,
+			USER_TIMEZONE: '',
 
 			availableCalendars: {},
 			visibleCalendars: {},
@@ -198,7 +198,8 @@ AUI.add(
 							parentCalendarBookingId: schedulerEvent.get('calendarBookingId'),
 							recurring: schedulerEvent.isRecurring(),
 							startTime: startDate.getTime(),
-							statuses: statuses.join(',')
+							statuses: statuses.join(','),
+							timeZone: instance.USER_TIMEZONE
 						}
 					},
 					{
@@ -447,7 +448,8 @@ AUI.add(
 							recurring: true,
 							start: -1,
 							startTime: startDate.getTime(),
-							statuses: status.join(',')
+							statuses: status.join(','),
+							timeZone: instance.USER_TIMEZONE
 						}
 					},
 					{
@@ -618,8 +620,8 @@ AUI.add(
 				var instance = this;
 
 				var allDay = calendarBooking.allDay;
-				var startDate = calendarBooking.startTime;
-				var endDate = calendarBooking.endTime;
+				var startDate = calendarBooking.displayStartTime;
+				var endDate = calendarBooking.displayEndTime;
 
 				if (allDay) {
 					startDate = instance.toLocalTimeWithoutUserTimeZone(startDate);
@@ -654,9 +656,7 @@ AUI.add(
 			toLocalTime: function(utc) {
 				var instance = this;
 
-				var date = instance.toLocalTimeWithoutUserTimeZone(utc);
-
-				return DateMath.add(date, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
+				return instance.toLocalTimeWithoutUserTimeZone(utc);
 			},
 
 			toLocalTimeWithoutUserTimeZone: function(utc) {
@@ -672,9 +672,7 @@ AUI.add(
 			toUTC: function(date) {
 				var instance = this;
 
-				var utc = instance.toUTCWithoutUserTimeZone(date);
-
-				return DateMath.subtract(utc, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
+				return instance.toUTCWithoutUserTimeZone(date);
 			},
 
 			toUTCWithoutUserTimeZone: function(date) {
@@ -684,7 +682,7 @@ AUI.add(
 					date = new Date(date);
 				}
 
-				return DateMath.subtract(date, DateMath.MINUTES, date.getTimezoneOffset());
+				return DateMath.add(date, DateMath.MINUTES, date.getTimezoneOffset());
 			},
 
 			updateEvent: function(schedulerEvent, success) {
