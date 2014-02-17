@@ -1233,6 +1233,25 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 	}
 
 	@Override
+	public long getDisplayTimeOffset(long time) {
+		try {
+			String methodName = "getDisplayTimeOffset";
+
+			Class<?>[] parameterTypes = new Class<?>[] { long.class };
+
+			Object[] parameterValues = new Object[] { time };
+
+			Long returnObj = (Long)invokeOnRemoteModel(methodName,
+					parameterTypes, parameterValues);
+
+			return returnObj;
+		}
+		catch (Exception e) {
+			throw new UnsupportedOperationException(e);
+		}
+	}
+
+	@Override
 	public com.liferay.calendar.notification.NotificationType getSecondReminderNotificationType() {
 		try {
 			String methodName = "getSecondReminderNotificationType";

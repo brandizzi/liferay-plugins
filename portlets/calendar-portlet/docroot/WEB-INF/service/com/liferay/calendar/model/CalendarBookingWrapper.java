@@ -1402,6 +1402,11 @@ public class CalendarBookingWrapper implements CalendarBooking,
 	}
 
 	@Override
+	public long getDisplayTimeOffset(long time) {
+		return _calendarBooking.getDisplayTimeOffset(time);
+	}
+
+	@Override
 	public long getDuration() {
 		return _calendarBooking.getDuration();
 	}
