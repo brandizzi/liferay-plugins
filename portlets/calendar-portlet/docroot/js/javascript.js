@@ -97,7 +97,7 @@ AUI.add(
 			NOTIFICATION_DEFAULT_TYPE: 'email',
 			PORTLET_NAMESPACE: STR_BLANK,
 			RENDERING_RULES_URL: null,
-			USER_TIMEZONE_OFFSET: 0,
+			USER_TIME_ZONE: 'UTC',
 
 			availableCalendars: {},
 			visibleCalendars: {},
@@ -161,31 +161,6 @@ AUI.add(
 								}
 							}
 						}
-					}
-				);
-			},
-
-			adjustSchedulerEventDisplayTime: function(schedulerEvent) {
-				var instance = this;
-
-				var allDay = schedulerEvent.get('allDay');
-
-				var timeAdjuster = instance.toLocalTime;
-
-				if (allDay) {
-					timeAdjuster = instance.toLocalTimeWithoutUserTimeZone;
-				}
-
-				var endDate = schedulerEvent.get('endDate');
-				var startDate = schedulerEvent.get('startDate');
-
-				schedulerEvent.setAttrs(
-					{
-						endDate: timeAdjuster.call(instance, endDate),
-						startDate: timeAdjuster.call(instance, startDate)
-					},
-					{
-						silent: true
 					}
 				);
 			},
@@ -255,8 +230,6 @@ AUI.add(
 						status: calendarBooking.status
 					}
 				);
-
-				CalendarUtil.adjustSchedulerEventDisplayTime(schedulerEvent);
 
 				return schedulerEvent;
 			},
@@ -651,14 +624,6 @@ AUI.add(
 			toLocalTime: function(utc) {
 				var instance = this;
 
-				var date = instance.toLocalTimeWithoutUserTimeZone(utc);
-
-				return DateMath.add(date, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
-			},
-
-			toLocalTimeWithoutUserTimeZone: function(utc) {
-				var instance = this;
-
 				if (!isDate(utc)) {
 					utc = new Date(utc);
 				}
@@ -667,14 +632,6 @@ AUI.add(
 			},
 
 			toUTC: function(date) {
-				var instance = this;
-
-				var utc = instance.toUTCWithoutUserTimeZone(date);
-
-				return DateMath.subtract(utc, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
-			},
-
-			toUTCWithoutUserTimeZone: function(date) {
 				var instance = this;
 
 				if (!isDate(date)) {
@@ -704,6 +661,7 @@ AUI.add(
 							startTime: CalendarUtil.toUTC(schedulerEvent.get('startDate')).getTime(),
 							status: schedulerEvent.get('status'),
 							titleMap: instance.getLocalizationMap(Liferay.Util.unescapeHTML(schedulerEvent.get('content'))),
+							timeZoneId: instance.USER_TIME_ZONE,
 							userId: USER_ID
 						}
 					},
@@ -756,6 +714,7 @@ AUI.add(
 							startTime: CalendarUtil.toUTC(schedulerEvent.get('startDate')).getTime(),
 							status: schedulerEvent.get('status'),
 							titleMap: instance.getLocalizationMap(Liferay.Util.unescapeHTML(schedulerEvent.get('content'))),
+							timeZoneId: instance.USER_TIME_ZONE,
 							userId: USER_ID
 						}
 					},
@@ -1963,10 +1922,10 @@ AUI.add(
 
 						data.date = date.getTime();
 
-						data.endTime = CalendarUtil.toUTC(data.endTime).getTime();
-						data.startTime = CalendarUtil.toUTC(data.startTime).getTime();
-
 						data.titleCurrentValue = encodeURIComponent(data.content);
+
+						data.startTime = CalendarUtil.toUTC(data.startTime).getTime();
+						data.endTime = CalendarUtil.toUTC(data.endTime).getTime();
 
 						if (schedulerEvent) {
 							data.allDay = schedulerEvent.get('allDay');
