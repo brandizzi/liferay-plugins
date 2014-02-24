@@ -25,9 +25,11 @@ import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.service.CalendarResourceLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @author Eduardo Lundgren
@@ -88,6 +90,31 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 	@Override
 	public NotificationType getSecondReminderNotificationType() {
 		return NotificationType.parse(getSecondReminderType());
+	}
+
+	@Override
+	public TimeZone getTimeZone() {
+		TimeZone timeZone = TimeZoneUtil.getDefault();
+
+		try {
+			Calendar calendar = null;
+
+			if (isMasterBooking()) {
+				calendar = getCalendar();
+			}
+			else {
+				CalendarBooking parentCalendarBooking =
+					getParentCalendarBooking();
+
+				calendar = parentCalendarBooking.getCalendar();
+			}
+
+			timeZone = calendar.getTimeZone();
+		}
+		catch (Exception e) {
+		}
+
+		return timeZone;
 	}
 
 	@Override
