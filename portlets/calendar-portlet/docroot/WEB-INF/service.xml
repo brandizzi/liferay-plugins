@@ -32,6 +32,7 @@
 		<column name="name" type="String" localized="true" />
 		<column name="description" type="String" localized="true" />
 		<column name="color" type="int" />
+		<column name="timeZoneId" type="String" />
 		<column name="defaultCalendar" type="boolean" />
 		<column name="enableComments" type="boolean" />
 		<column name="enableRatings" type="boolean" />
@@ -53,6 +54,10 @@
 			<finder-column name="calendarResourceId" />
 			<finder-column name="defaultCalendar" />
 		</finder>
+
+		<!-- References -->
+
+		<reference package-path="com.liferay.portal" entity="Group" />
 	</entity>
 	<entity name="CalendarBooking" uuid="true" local-service="true" remote-service="true" trash-enabled="true">
 

@@ -18,6 +18,9 @@ import com.liferay.calendar.model.CalendarResource;
 import com.liferay.calendar.service.CalendarResourceLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
+
+import java.util.TimeZone;
 
 /**
  * @author Eduardo Lundgren
@@ -33,6 +36,11 @@ public class CalendarImpl extends CalendarBaseImpl {
 
 		return CalendarResourceLocalServiceUtil.getCalendarResource(
 			getCalendarResourceId());
+	}
+
+	@Override
+	public TimeZone getTimeZone() {
+		return TimeZoneUtil.getTimeZone(getTimeZoneId());
 	}
 
 }

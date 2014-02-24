@@ -27,7 +27,9 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
@@ -51,6 +53,30 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
 			int color, boolean defaultCalendar, boolean enableComments,
 			boolean enableRatings, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		String timeZoneId = TimeZoneUtil.getDefault().getID();
+		Group group = groupLocalService.getGroup(groupId);
+
+		if (group.isUser()) {
+			User user = userLocalService.getUser(group.getClassPK());
+
+			timeZoneId = user.getTimeZoneId();
+		}
+
+		return addCalendar(
+			userId, groupId, calendarResourceId, nameMap, descriptionMap, color,
+			timeZoneId, defaultCalendar, enableComments, enableRatings,
+			serviceContext);
+	}
+
+	@Override
+	public Calendar addCalendar(
+			long userId, long groupId, long calendarResourceId,
+			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
+			int color, String timeZoneId, boolean defaultCalendar,
+			boolean enableComments, boolean enableRatings,
+			ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		// Calendar
@@ -80,6 +106,7 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 		calendar.setNameMap(nameMap);
 		calendar.setDescriptionMap(descriptionMap);
 		calendar.setColor(color);
+		calendar.setTimeZoneId(timeZoneId);
 		calendar.setDefaultCalendar(defaultCalendar);
 		calendar.setEnableComments(enableComments);
 		calendar.setEnableRatings(enableRatings);
@@ -260,31 +287,12 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 			boolean enableRatings, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
-		// Calendar
-
-		if (color <= 0) {
-			color = PortletPropsValues.CALENDAR_COLOR_DEFAULT;
-		}
-
 		Calendar calendar = calendarPersistence.findByPrimaryKey(calendarId);
 
-		validate(nameMap);
-
-		calendar.setModifiedDate(serviceContext.getModifiedDate(null));
-		calendar.setNameMap(nameMap);
-		calendar.setDescriptionMap(descriptionMap);
-		calendar.setColor(color);
-		calendar.setDefaultCalendar(defaultCalendar);
-		calendar.setEnableComments(enableComments);
-		calendar.setEnableRatings(enableRatings);
-
-		calendarPersistence.update(calendar);
-
-		// Calendar
-
-		updateDefaultCalendar(calendar);
-
-		return calendar;
+		return updateCalendar(
+			calendarId, nameMap, descriptionMap, color,
+			calendar.getTimeZoneId(), defaultCalendar, enableComments,
+			enableRatings, serviceContext);
 	}
 
 	@Override
@@ -300,6 +308,42 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 			calendarId, nameMap, descriptionMap, color,
 			calendar.isDefaultCalendar(), calendar.isEnableComments(),
 			calendar.isEnableRatings(), serviceContext);
+	}
+
+	@Override
+	public Calendar updateCalendar(
+			long calendarId, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap, int color, String timeZoneId,
+			boolean defaultCalendar, boolean enableComments,
+			boolean enableRatings, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		// Calendar
+
+		if (color <= 0) {
+			color = PortletPropsValues.CALENDAR_COLOR_DEFAULT;
+		}
+
+		Calendar calendar = calendarPersistence.findByPrimaryKey(calendarId);
+
+		validate(nameMap);
+
+		calendar.setModifiedDate(serviceContext.getModifiedDate(null));
+		calendar.setNameMap(nameMap);
+		calendar.setDescriptionMap(descriptionMap);
+		calendar.setColor(color);
+		calendar.setTimeZoneId(timeZoneId);
+		calendar.setDefaultCalendar(defaultCalendar);
+		calendar.setEnableComments(enableComments);
+		calendar.setEnableRatings(enableRatings);
+
+		calendarPersistence.update(calendar);
+
+		// Calendar
+
+		updateDefaultCalendar(calendar);
+
+		return calendar;
 	}
 
 	@Override
