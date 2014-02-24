@@ -249,6 +249,7 @@ public class CalendarPortlet extends MVCPortlet {
 		Map<Locale, String> descriptionMap =
 			LocalizationUtil.getLocalizationMap(actionRequest, "description");
 		int color = ParamUtil.getInteger(actionRequest, "color");
+		String timeZoneId = ParamUtil.getString(actionRequest, "timeZoneId");
 		boolean defaultCalendar = ParamUtil.getBoolean(
 			actionRequest, "defaultCalendar");
 		boolean enableComments = ParamUtil.getBoolean(
@@ -268,8 +269,8 @@ public class CalendarPortlet extends MVCPortlet {
 
 			calendar = CalendarServiceUtil.addCalendar(
 				calendarResource.getGroupId(), calendarResourceId, nameMap,
-				descriptionMap, color, defaultCalendar, enableComments,
-				enableRatings, serviceContext);
+				descriptionMap, color, timeZoneId, defaultCalendar,
+				enableComments, enableRatings, serviceContext);
 		}
 		else {
 			calendar = CalendarServiceUtil.updateCalendar(
@@ -600,6 +601,25 @@ public class CalendarPortlet extends MVCPortlet {
 			WebKeys.CALENDAR_RESOURCE, calendarResource);
 	}
 
+	protected java.util.Calendar getDisplayCalendar(
+		PortletRequest portletRequest, String name) {
+
+		int month = ParamUtil.getInteger(portletRequest, name + "Month");
+		int day = ParamUtil.getInteger(portletRequest, name + "Day");
+		int year = ParamUtil.getInteger(portletRequest, name + "Year");
+		int hour = ParamUtil.getInteger(portletRequest, name + "Hour");
+		int minute = ParamUtil.getInteger(portletRequest, name + "Minute");
+
+		int amPm = ParamUtil.getInteger(portletRequest, name + "AmPm");
+
+		if (amPm == java.util.Calendar.PM) {
+			hour += 12;
+		}
+
+		return JCalendarUtil.getJCalendar(
+			year, month, day, hour, minute, 0, 0, TimeZoneUtil.GMT);
+	}
+
 	protected String getEditCalendarURL(
 			ActionRequest actionRequest, ActionResponse actionResponse,
 			Calendar calendar)
@@ -754,25 +774,6 @@ public class CalendarPortlet extends MVCPortlet {
 		return new String[] {
 			firstReminderType, secondReminderType
 		};
-	}
-
-	protected java.util.Calendar getDisplayCalendar(
-		PortletRequest portletRequest, String name) {
-
-		int month = ParamUtil.getInteger(portletRequest, name + "Month");
-		int day = ParamUtil.getInteger(portletRequest, name + "Day");
-		int year = ParamUtil.getInteger(portletRequest, name + "Year");
-		int hour = ParamUtil.getInteger(portletRequest, name + "Hour");
-		int minute = ParamUtil.getInteger(portletRequest, name + "Minute");
-
-		int amPm = ParamUtil.getInteger(portletRequest, name + "AmPm");
-
-		if (amPm == java.util.Calendar.PM) {
-			hour += 12;
-		}
-
-		return JCalendarUtil.getJCalendar(
-			year, month, day, hour, minute, 0, 0, TimeZoneUtil.GMT);
 	}
 
 	@Override
