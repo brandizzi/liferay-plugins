@@ -17,6 +17,7 @@
 			<hint-collection name="TEXTAREA" />
 		</field>
 		<field name="color" type="int" />
+		<field name="timeZoneId" type="String" />
 		<field name="defaultCalendar" type="boolean" />
 		<field name="enableComments" type="boolean" />
 		<field name="enableRatings" type="boolean" />

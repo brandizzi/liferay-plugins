@@ -44,6 +44,7 @@ public class CalendarSoap implements Serializable {
 		soapModel.setName(model.getName());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setColor(model.getColor());
+		soapModel.setTimeZoneId(model.getTimeZoneId());
 		soapModel.setDefaultCalendar(model.getDefaultCalendar());
 		soapModel.setEnableComments(model.getEnableComments());
 		soapModel.setEnableRatings(model.getEnableRatings());
@@ -203,6 +204,14 @@ public class CalendarSoap implements Serializable {
 		_color = color;
 	}
 
+	public String getTimeZoneId() {
+		return _timeZoneId;
+	}
+
+	public void setTimeZoneId(String timeZoneId) {
+		_timeZoneId = timeZoneId;
+	}
+
 	public boolean getDefaultCalendar() {
 		return _defaultCalendar;
 	}
@@ -252,6 +261,7 @@ public class CalendarSoap implements Serializable {
 	private String _name;
 	private String _description;
 	private int _color;
+	private String _timeZoneId;
 	private boolean _defaultCalendar;
 	private boolean _enableComments;
 	private boolean _enableRatings;

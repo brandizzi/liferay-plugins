@@ -4153,6 +4153,7 @@ public class CalendarPersistenceImpl extends BasePersistenceImpl<Calendar>
 		calendarImpl.setName(calendar.getName());
 		calendarImpl.setDescription(calendar.getDescription());
 		calendarImpl.setColor(calendar.getColor());
+		calendarImpl.setTimeZoneId(calendar.getTimeZoneId());
 		calendarImpl.setDefaultCalendar(calendar.isDefaultCalendar());
 		calendarImpl.setEnableComments(calendar.isEnableComments());
 		calendarImpl.setEnableRatings(calendar.isEnableRatings());
