@@ -92,6 +92,28 @@ public class JCalendarUtil {
 		return offset;
 	}
 
+	public static int getTimeZoneOffsetBetweenDates(
+		Calendar calendar1, Calendar calendar2, TimeZone timeZone) {
+
+		calendar1 = JCalendarUtil.getJCalendar(
+			calendar1.getTimeInMillis(), timeZone);
+
+		calendar2 = JCalendarUtil.getJCalendar(
+				calendar2.getTimeInMillis(), timeZone);
+
+		Calendar sameHourCalendar = JCalendarUtil.getJCalendar(
+			calendar1.get(Calendar.YEAR), calendar1.get(Calendar.MONTH),
+			calendar1.get(Calendar.DAY_OF_MONTH),
+			calendar2.get(Calendar.HOUR_OF_DAY), calendar2.get(Calendar.MINUTE),
+			calendar2.get(Calendar.SECOND), calendar2.get(Calendar.MILLISECOND),
+			timeZone);
+
+		long offset =
+			calendar1.getTimeInMillis() - sameHourCalendar.getTimeInMillis();
+
+		return (int)offset;
+	}
+
 	public static Calendar toLastHourJCalendar(Calendar jCalendar) {
 		Calendar lastHourJCalendar = (Calendar)jCalendar.clone();
 
