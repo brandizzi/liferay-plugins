@@ -101,6 +101,56 @@ public class JCalendarUtilTest {
 	}
 
 	@Test
+	public void testGetShiftLosAngelesDST() {
+		Calendar date1 = JCalendarUtil.getJCalendar(
+			2012, Calendar.MAY, 1, 12, 0, 0, 0, TimeZoneUtil.GMT);
+		Calendar date2 = JCalendarUtil.getJCalendar(
+			2013, Calendar.JULY, 2, 12, 0, 0, 0, TimeZoneUtil.GMT);
+
+		int jump = JCalendarUtil.getShiftInMinutes(
+			date1, date2, LOS_ANGELES_TIME_ZONE);
+
+		Assert.assertEquals(0, jump);
+	}
+
+	public void testGetShiftLosAngelesDST2NoDST() {
+		Calendar date1 = JCalendarUtil.getJCalendar(
+			2013, Calendar.JULY, 1, 12, 0, 0, 0, TimeZoneUtil.GMT);
+		Calendar date2 = JCalendarUtil.getJCalendar(
+			2013, Calendar.JANUARY, 1, 12, 0, 0, 0, TimeZoneUtil.GMT);
+
+		int jump = JCalendarUtil.getShiftInMinutes(
+			date1, date2, LOS_ANGELES_TIME_ZONE);
+
+		Assert.assertEquals(-1*(JCalendarUtil.HOUR/JCalendarUtil.MINUTE), jump);
+	}
+
+	@Test
+	public void testGetShiftLosAngelesNoDST() {
+		Calendar date1 = JCalendarUtil.getJCalendar(
+			2013, Calendar.DECEMBER, 1, 12, 0, 0, 0, TimeZoneUtil.GMT);
+		Calendar date2 = JCalendarUtil.getJCalendar(
+			2013, Calendar.JANUARY, 2, 12, 0, 0, 0, TimeZoneUtil.GMT);
+
+		int jump = JCalendarUtil.getShiftInMinutes(
+			date1, date2, LOS_ANGELES_TIME_ZONE);
+
+		Assert.assertEquals(0, jump);
+	}
+
+	public void testGetShiftLosAngelesNoDST2DST() {
+		Calendar date1 = JCalendarUtil.getJCalendar(
+			2013, Calendar.JANUARY, 1, 12, 0, 0, 0, TimeZoneUtil.GMT);
+		Calendar date2 = JCalendarUtil.getJCalendar(
+			2013, Calendar.JANUARY, 1, 12, 0, 0, 0, TimeZoneUtil.GMT);
+
+		int jump = JCalendarUtil.getShiftInMinutes(
+			date1, date2, SAO_PAULO_TIME_ZONE);
+
+		Assert.assertEquals(JCalendarUtil.HOUR/JCalendarUtil.MINUTE, jump);
+	}
+
+	@Test
 	public void testSimulatingTimeLosAngelesDST() {
 		Calendar dateToDisplay = JCalendarUtil.getJCalendar(
 			2013, Calendar.JULY, 1, 12, 0, 0, 0, TimeZoneUtil.GMT);

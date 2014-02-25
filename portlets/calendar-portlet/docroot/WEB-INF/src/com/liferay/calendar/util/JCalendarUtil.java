@@ -103,6 +103,31 @@ public class JCalendarUtil {
 		return jCalendar;
 	}
 
+	public static int getShiftInMinutes(
+		Calendar referenceCalendar, Calendar shiftedCalendar,
+		TimeZone timeZone) {
+
+		referenceCalendar = JCalendarUtil.getJCalendar(
+			referenceCalendar.getTimeInMillis(), timeZone);
+
+		shiftedCalendar = JCalendarUtil.getJCalendar(
+				shiftedCalendar.getTimeInMillis(), timeZone);
+
+		Calendar sameHourReferenceCalendar = JCalendarUtil.getJCalendar(
+			referenceCalendar.get(Calendar.YEAR),
+			referenceCalendar.get(Calendar.MONTH),
+			referenceCalendar.get(Calendar.DAY_OF_MONTH),
+			shiftedCalendar.get(Calendar.HOUR_OF_DAY),
+			shiftedCalendar.get(Calendar.MINUTE),
+			shiftedCalendar.get(Calendar.SECOND),
+			shiftedCalendar.get(Calendar.MILLISECOND), timeZone);
+
+		long shift = referenceCalendar.getTimeInMillis() -
+			sameHourReferenceCalendar.getTimeInMillis();
+
+		return (int) (shift/JCalendarUtil.MINUTE);
+	}
+
 	public static Calendar toDisplayCalendar(
 		Calendar calendar, TimeZone simulatedTimeZone) {
 
