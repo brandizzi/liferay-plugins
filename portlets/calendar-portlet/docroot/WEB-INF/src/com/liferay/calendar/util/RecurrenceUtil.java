@@ -24,6 +24,7 @@ import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
 
 import java.text.ParseException;
 
@@ -147,22 +148,42 @@ public class RecurrenceUtil {
 	private static CalendarBooking _copyCalendarBooking(
 		CalendarBooking calendarBooking, DateValue startDateValue) {
 
+		TimeZone timeZone;
+
+		try {
+			com.liferay.calendar.model.Calendar calendar =
+				calendarBooking.getCalendar();
+
+			timeZone = calendar.getTimeZone();
+		}
+		catch (Exception e) {
+			timeZone = TimeZoneUtil.getDefault();
+		}
+
 		CalendarBooking newCalendarBooking =
 			(CalendarBooking)calendarBooking.clone();
 
-		Calendar jCalendar = JCalendarUtil.getJCalendar(
+		Calendar calendarBookingStartCalendar = JCalendarUtil.getJCalendar(
 			calendarBooking.getStartTime());
+		Calendar newStartCalendar =
+			(Calendar)calendarBookingStartCalendar.clone();
 
-		jCalendar = JCalendarUtil.getJCalendar(
+		newStartCalendar = JCalendarUtil.getJCalendar(
 			startDateValue.year(), startDateValue.month() - 1,
-			startDateValue.day(), jCalendar.get(Calendar.HOUR_OF_DAY),
-			jCalendar.get(Calendar.MINUTE), jCalendar.get(Calendar.SECOND),
-			jCalendar.get(Calendar.MILLISECOND),
+			startDateValue.day(), newStartCalendar.get(Calendar.HOUR_OF_DAY),
+			newStartCalendar.get(Calendar.MINUTE),
+			newStartCalendar.get(Calendar.SECOND),
+			newStartCalendar.get(Calendar.MILLISECOND),
 			TimeZone.getTimeZone(StringPool.UTC));
 
+		int shiftBetweenInstances = JCalendarUtil.getShiftInMinutes(
+			calendarBookingStartCalendar, newStartCalendar, timeZone);
+
+		newStartCalendar.add(Calendar.MINUTE, shiftBetweenInstances);
+
 		newCalendarBooking.setEndTime(
-			jCalendar.getTimeInMillis() + calendarBooking.getDuration());
-		newCalendarBooking.setStartTime(jCalendar.getTimeInMillis());
+			newStartCalendar.getTimeInMillis() + calendarBooking.getDuration());
+		newCalendarBooking.setStartTime(newStartCalendar.getTimeInMillis());
 
 		return newCalendarBooking;
 	}
