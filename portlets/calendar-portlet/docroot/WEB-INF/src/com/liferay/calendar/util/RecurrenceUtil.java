@@ -24,6 +24,7 @@ import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
 
 import java.text.ParseException;
 
@@ -147,22 +148,35 @@ public class RecurrenceUtil {
 	private static CalendarBooking _copyCalendarBooking(
 		CalendarBooking calendarBooking, DateValue startDateValue) {
 
+		TimeZone timeZone;
+
+		try {
+			timeZone = calendarBooking.getCalendar().getTimeZone();
+		}
+		catch (Exception e) {
+			timeZone = TimeZoneUtil.getDefault();
+		}
+
 		CalendarBooking newCalendarBooking =
 			(CalendarBooking)calendarBooking.clone();
 
 		Calendar jCalendar = JCalendarUtil.getJCalendar(
 			calendarBooking.getStartTime());
-
-		jCalendar = JCalendarUtil.getJCalendar(
+		Calendar newJCalendar = JCalendarUtil.getJCalendar(
 			startDateValue.year(), startDateValue.month() - 1,
 			startDateValue.day(), jCalendar.get(Calendar.HOUR_OF_DAY),
 			jCalendar.get(Calendar.MINUTE), jCalendar.get(Calendar.SECOND),
 			jCalendar.get(Calendar.MILLISECOND),
 			TimeZone.getTimeZone(StringPool.UTC));
 
+		int offset = JCalendarUtil.getTimeZoneOffsetBetweenDates(
+			jCalendar, newJCalendar, timeZone);
+
+		newJCalendar.add(Calendar.MILLISECOND, offset);
+
 		newCalendarBooking.setEndTime(
-			jCalendar.getTimeInMillis() + calendarBooking.getDuration());
-		newCalendarBooking.setStartTime(jCalendar.getTimeInMillis());
+			newJCalendar.getTimeInMillis() + calendarBooking.getDuration());
+		newCalendarBooking.setStartTime(newJCalendar.getTimeInMillis());
 
 		return newCalendarBooking;
 	}
