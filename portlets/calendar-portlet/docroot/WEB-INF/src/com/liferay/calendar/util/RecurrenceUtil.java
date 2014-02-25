@@ -152,17 +152,21 @@ public class RecurrenceUtil {
 
 		Calendar jCalendar = JCalendarUtil.getJCalendar(
 			calendarBooking.getStartTime());
-
-		jCalendar = JCalendarUtil.getJCalendar(
+		Calendar newJCalendar = JCalendarUtil.getJCalendar(
 			startDateValue.year(), startDateValue.month() - 1,
 			startDateValue.day(), jCalendar.get(Calendar.HOUR_OF_DAY),
 			jCalendar.get(Calendar.MINUTE), jCalendar.get(Calendar.SECOND),
 			jCalendar.get(Calendar.MILLISECOND),
 			TimeZone.getTimeZone(StringPool.UTC));
 
+		int shift = JCalendarUtil.getDstShift(
+			jCalendar, newJCalendar, calendarBooking.getTimeZone());
+
+		newJCalendar.add(Calendar.MILLISECOND, shift);
+
 		newCalendarBooking.setEndTime(
-			jCalendar.getTimeInMillis() + calendarBooking.getDuration());
-		newCalendarBooking.setStartTime(jCalendar.getTimeInMillis());
+			newJCalendar.getTimeInMillis() + calendarBooking.getDuration());
+		newCalendarBooking.setStartTime(newJCalendar.getTimeInMillis());
 
 		return newCalendarBooking;
 	}
