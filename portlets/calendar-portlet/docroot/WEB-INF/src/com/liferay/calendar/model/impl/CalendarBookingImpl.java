@@ -23,9 +23,15 @@ import com.liferay.calendar.recurrence.RecurrenceSerializer;
 import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
 import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.service.CalendarResourceLocalServiceUtil;
+import com.liferay.calendar.util.JCalendarUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 import java.util.List;
 
@@ -56,6 +62,18 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 
 		return CalendarBookingLocalServiceUtil.getChildCalendarBookings(
 			getCalendarBookingId());
+	}
+
+	@JSON
+	@Override
+	public long getDisplayEndTime() {
+		return getDisplayTime(getEndTime());
+	}
+
+	@JSON
+	@Override
+	public long getDisplayStartTime() {
+		return getDisplayTime(getStartTime());
 	}
 
 	@Override
@@ -106,6 +124,27 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 		}
 
 		return false;
+	}
+
+	protected long getDisplayTime(long time) {
+		if (isAllDay()) {
+			return time;
+		}
+
+		try {
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			long userId = serviceContext.getUserId();
+
+			User user = UserLocalServiceUtil.getUser(userId);
+
+			time = JCalendarUtil.toDisplayCalendar(time, user.getTimeZone());
+		}
+		catch (Exception e) {
+		}
+
+		return time;
 	}
 
 	private Recurrence _recurrenceObj;
