@@ -191,7 +191,7 @@ public class CalendarUtil {
 		return StringUtil.split(StringUtil.merge(keywordsList));
 	}
 
-	public static JSONArray toCalendarBookingsJSONArray(
+	public static JSONArray toCalendarJSONArray(
 			ThemeDisplay themeDisplay, List<CalendarBooking> calendarBookings)
 		throws PortalException, SystemException {
 
