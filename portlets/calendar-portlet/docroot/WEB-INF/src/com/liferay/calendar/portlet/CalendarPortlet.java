@@ -51,6 +51,7 @@ import com.liferay.calendar.util.RSSUtil;
 import com.liferay.calendar.util.WebKeys;
 import com.liferay.calendar.util.comparator.CalendarResourceNameComparator;
 import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -211,6 +212,12 @@ public class CalendarPortlet extends MVCPortlet {
 
 			if (resourceID.equals("calendarBookingInvitees")) {
 				serveCalendarBookingInvitees(resourceRequest, resourceResponse);
+			}
+			else if (resourceID.equals("calendarBooking")) {
+				serveCalendarBooking(resourceRequest, resourceResponse);
+			}
+			else if (resourceID.equals("calendarBookings")) {
+				serveCalendarBookings(resourceRequest, resourceResponse);
 			}
 			else if (resourceID.equals("calendarBookingsRSS")) {
 				serveCalendarBookingsRSS(resourceRequest, resourceResponse);
@@ -810,6 +817,26 @@ public class CalendarPortlet extends MVCPortlet {
 		return false;
 	}
 
+	protected void serveCalendarBooking(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+		throws IOException, PortalException, SystemException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		long calendarBookingId = ParamUtil.getLong(
+			resourceRequest, "calendarBookingId");
+
+		CalendarBooking calendarBooking =
+			CalendarBookingServiceUtil.getCalendarBooking(calendarBookingId);
+
+		JSONObject jsonObject =
+			CalendarUtil.toCalendarBookingJSONObject(
+				themeDisplay, calendarBooking, getTimeZone(resourceRequest));
+
+		writeJSON(resourceRequest, resourceResponse, jsonObject);
+	}
+
 	protected void serveCalendarBookingInvitees(
 		ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 			throws Exception {
@@ -835,6 +862,32 @@ public class CalendarPortlet extends MVCPortlet {
 
 			jsonArray.put(jsonObject);
 		}
+
+		writeJSON(resourceRequest, resourceResponse, jsonArray);
+	}
+
+	protected void serveCalendarBookings(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+		throws IOException, PortalException, SystemException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		long[] calendarIds = ParamUtil.getLongValues(
+			resourceRequest, "calendarIds");
+		long startTime = ParamUtil.getLong(resourceRequest, "startTime");
+		long endTime = ParamUtil.getLong(resourceRequest, "endTime");
+		int[] statuses = ParamUtil.getIntegerValues(
+			resourceRequest, "statuses");
+
+		List<CalendarBooking> calendarBookings =
+			CalendarBookingServiceUtil.search(
+				themeDisplay.getCompanyId(), new long[0], calendarIds,
+				new long[0], -1, null, startTime, endTime, true /*?*/, statuses,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		JSONArray jsonArray = CalendarUtil.toCalendarBookingJSONArray(
+			themeDisplay, calendarBookings, getTimeZone(resourceRequest));
 
 		writeJSON(resourceRequest, resourceResponse, jsonArray);
 	}
