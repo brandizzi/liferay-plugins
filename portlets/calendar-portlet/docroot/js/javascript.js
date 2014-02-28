@@ -100,13 +100,16 @@ AUI.add(
 			NOTIFICATION_DEFAULT_TYPE: 'email',
 			PORTLET_NAMESPACE: STR_BLANK,
 			RENDERING_RULES_URL: null,
-			USER_TIMEZONE_OFFSET: 0,
+			USER_TIME_ZONE: 'UTC',
 
 			availableCalendars: {},
 			visibleCalendars: {},
 
 			addEvent: function(schedulerEvent, success) {
 				var instance = this;
+
+				var startDate = schedulerEvent.get('startDate');
+				var endDate = schedulerEvent.get('endDate');
 
 				instance.invokeService(
 					{
@@ -115,7 +118,11 @@ AUI.add(
 							calendarId: schedulerEvent.get('calendarId'),
 							childCalendarIds: STR_BLANK,
 							descriptionMap: instance.getLocalizationMap(schedulerEvent.get('description')),
-							endTime: CalendarUtil.toUTC(schedulerEvent.get('endDate')).getTime(),
+							endYear: endDate.getFullYear(),
+							endMonth: endDate.getMonth(),
+							endDay: endDate.getDate(),
+							endHour: endDate.getHours(),
+							endMinute: endDate.getMinutes(),
 							firstReminder: schedulerEvent.get('firstReminder'),
 							firstReminderType: schedulerEvent.get('firstReminderType'),
 							location: schedulerEvent.get('location'),
@@ -123,8 +130,13 @@ AUI.add(
 							recurrence: schedulerEvent.get('recurrence'),
 							secondReminder: schedulerEvent.get('secondReminder'),
 							secondReminderType: schedulerEvent.get('secondReminderType'),
-							startTime: CalendarUtil.toUTC(schedulerEvent.get('startDate')).getTime(),
-							titleMap: instance.getLocalizationMap(Liferay.Util.unescapeHTML(schedulerEvent.get('content')))
+							startYear: startDate.getFullYear(),
+							startMonth: startDate.getMonth(),
+							startDay: startDate.getDate(),
+							startHour: startDate.getHours(),
+							startMinute: startDate.getMinutes(),
+							titleMap: instance.getLocalizationMap(Liferay.Util.unescapeHTML(schedulerEvent.get('content'))),
+							timeZoneId: instance.USER_TIME_ZONE
 						}
 					},
 					{
@@ -699,6 +711,9 @@ AUI.add(
 			updateEventInstance: function(schedulerEvent, allFollowing, success) {
 				var instance = this;
 
+				var startDate = schedulerEvent.get('startDate');
+				var endDate = schedulerEvent.get('endDate');
+
 				instance.invokeService(
 					{
 						'/calendar-portlet.calendarbooking/update-calendar-booking-instance': {
@@ -707,17 +722,25 @@ AUI.add(
 							calendarBookingId: schedulerEvent.get('calendarBookingId'),
 							calendarId: schedulerEvent.get('calendarId'),
 							descriptionMap: instance.getLocalizationMap(schedulerEvent.get('description')),
-							endTime: CalendarUtil.toUTC(schedulerEvent.get('endDate')).getTime(),
+							endYear: endDate.getFullYear(),
+							endMonth: endDate.getMonth(),
+							endDay: endDate.getDate(),
+							endHour: endDate.getHours(),
+							endMinute: endDate.getMinutes(),
 							firstReminder: schedulerEvent.get('firstReminder'),
 							firstReminderType: schedulerEvent.get('firstReminderType'),
 							location: schedulerEvent.get('location'),
 							recurrence: schedulerEvent.get('recurrence'),
 							secondReminder: schedulerEvent.get('secondReminder'),
 							secondReminderType: schedulerEvent.get('secondReminderType'),
-							startTime: CalendarUtil.toUTC(schedulerEvent.get('startDate')).getTime(),
+							startYear: startDate.getFullYear(),
+							startMonth: startDate.getMonth(),
+							startDay: startDate.getDate(),
+							startHour: startDate.getHours(),
+							startMinute: startDate.getMinutes(),
 							status: schedulerEvent.get('status'),
 							titleMap: instance.getLocalizationMap(Liferay.Util.unescapeHTML(schedulerEvent.get('content'))),
-							userId: USER_ID
+							timeZoneId: instance.USER_TIME_ZONE
 						}
 					},
 					{
