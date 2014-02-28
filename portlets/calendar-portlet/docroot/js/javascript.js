@@ -625,33 +625,7 @@ AUI.add(
 				return availableCalendars;
 			},
 
-			toLocalTime: function(utc) {
-				var instance = this;
-
-				var date = instance.toLocalTimeWithoutUserTimeZone(utc);
-
-				return DateMath.add(date, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
-			},
-
-			toLocalTimeWithoutUserTimeZone: function(utc) {
-				var instance = this;
-
-				if (!isDate(utc)) {
-					utc = new Date(utc);
-				}
-
-				return DateMath.add(utc, DateMath.MINUTES, utc.getTimezoneOffset());
-			},
-
 			toUTC: function(date) {
-				var instance = this;
-
-				var utc = instance.toUTCWithoutUserTimeZone(date);
-
-				return DateMath.subtract(utc, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
-			},
-
-			toUTCWithoutUserTimeZone: function(date) {
 				var instance = this;
 
 				if (!isDate(date)) {
