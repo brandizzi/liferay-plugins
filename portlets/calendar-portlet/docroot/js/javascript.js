@@ -33,6 +33,8 @@ AUI.add(
 
 		var STR_SPACE = ' ';
 
+		var TPL_CALENDAR_BOOKINGS_URL = '{calendarBookingsURL}&{portletNamespace}calendarIds={calendarIds}&{portletNamespace}startTime={startTime}&{portletNamespace}endTime={endTime}&{portletNamespace}statuses={statuses}';
+
 		var TPL_INVITEES_URL = '{inviteesURL}&{portletNamespace}parentCalendarBookingId={calendarBookingId}';
 
 		var TPL_RENDERING_RULES_URL = '{renderingRulesURL}&{portletNamespace}calendarIds={calendarIds}&{portletNamespace}startTime={startTime}&{portletNamespace}endTime={endTime}&{portletNamespace}ruleName={ruleName}';
@@ -92,6 +94,7 @@ AUI.add(
 		Liferay.Time = Time;
 
 		var CalendarUtil = {
+			CALENDAR_BOOKINGS_URL: null,
 			INVITEES_URL: null,
 			INVOKER_URL: themeDisplay.getPathContext() + '/api/jsonws/invoke',
 			NOTIFICATION_DEFAULT_TYPE: 'email',
@@ -165,31 +168,6 @@ AUI.add(
 				);
 			},
 
-			adjustSchedulerEventDisplayTime: function(schedulerEvent) {
-				var instance = this;
-
-				var allDay = schedulerEvent.get('allDay');
-
-				var timeAdjuster = instance.toLocalTime;
-
-				if (allDay) {
-					timeAdjuster = instance.toLocalTimeWithoutUserTimeZone;
-				}
-
-				var endDate = schedulerEvent.get('endDate');
-				var startDate = schedulerEvent.get('startDate');
-
-				schedulerEvent.setAttrs(
-					{
-						endDate: timeAdjuster.call(instance, endDate),
-						startDate: timeAdjuster.call(instance, startDate)
-					},
-					{
-						silent: true
-					}
-				);
-			},
-
 			createCalendarsAutoComplete: function(resourceURL, input, afterSelectFn) {
 				var instance = this;
 
@@ -236,6 +214,9 @@ AUI.add(
 			createSchedulerEvent: function(calendarBooking) {
 				var instance = this;
 
+				var startDate = new Date(calendarBooking.startYear, calendarBooking.startMonth, calendarBooking.startDay, calendarBooking.startHour, calendarBooking.startMinute);
+				var endDate = new Date(calendarBooking.endYear, calendarBooking.endMonth, calendarBooking.endDay, calendarBooking.endHour, calendarBooking.endMinute);
+
 				var schedulerEvent = new Liferay.SchedulerEvent(
 					{
 						allDay: calendarBooking.allDay,
@@ -243,7 +224,7 @@ AUI.add(
 						calendarId: calendarBooking.calendarId,
 						content: calendarBooking.titleCurrentValue,
 						description: calendarBooking.descriptionCurrentValue,
-						endDate: calendarBooking.endTime,
+						endDate: endDate.getTime(),
 						firstReminder: calendarBooking.firstReminder,
 						firstReminderType: calendarBooking.firstReminderType,
 						location: calendarBooking.location,
@@ -251,12 +232,10 @@ AUI.add(
 						recurrence: calendarBooking.recurrence,
 						secondReminder: calendarBooking.secondReminder,
 						secondReminderType: calendarBooking.secondReminderType,
-						startDate: calendarBooking.startTime,
+						startDate: startDate.getTime(),
 						status: calendarBooking.status
 					}
 				);
-
-				CalendarUtil.adjustSchedulerEventDisplayTime(schedulerEvent);
 
 				return schedulerEvent;
 			},
@@ -399,15 +378,27 @@ AUI.add(
 			getEvent: function(calendarBookingId, success, failure) {
 				var instance = this;
 
-				instance.invokeService(
+				var calendarBookingURL = Lang.sub(
+					TPL_CALENDAR_BOOKING_URL,
 					{
-						'/calendar-portlet.calendarbooking/get-calendar-booking': {
-							calendarBookingId: calendarBookingId
+						calendarBookingId: calendarBookingId,
+						calendarBookingURL: instance.CALENDAR_BOOKING_URL,
+						portletNamespace: instance.PORTLET_NAMESPACE
+					}
+				);
+
+				A.io.request(
+					calendarBookingURL,
+					{
+						dataType: 'json',
+						on: {
+							success: function() {
+								success(this.get('responseData'));
+							},
+							failure: function() {
+								failure(this.get('responseData'));
+							}
 						}
-					},
-					{
-						failure: failure,
-						success: success
 					}
 				);
 			},
@@ -417,27 +408,30 @@ AUI.add(
 
 				var calendarIds = AObject.keys(instance.availableCalendars);
 
-				instance.invokeService(
+				var calendarBookingsURL = Lang.sub(
+					TPL_CALENDAR_BOOKINGS_URL,
 					{
-						'/calendar-portlet.calendarbooking/search': {
-							calendarIds: calendarIds.join(','),
-							calendarResourceIds: STR_BLANK,
-							companyId: COMPANY_ID,
-							end: -1,
-							endTime: endDate.getTime(),
-							groupIds: [],
-							keywords: null,
-							orderByComparator: null,
-							parentCalendarBookingId: -1,
-							recurring: true,
-							start: -1,
-							startTime: startDate.getTime(),
-							statuses: status.join(',')
+						calendarIds: calendarIds.join(','),
+						endTime: endDate.getTime(),
+						startTime: startDate.getTime(),
+						statuses: status.join(','),
+						calendarBookingsURL: instance.CALENDAR_BOOKINGS_URL,
+						portletNamespace: instance.PORTLET_NAMESPACE
+					}
+				);
+
+				A.io.request(
+					calendarBookingsURL,
+					{
+						dataType: 'json',
+						on: {
+							success: function() {
+								success(this.get('responseData'));
+							},
+							failure: function() {
+								failure(this.get('responseData'));
+							}
 						}
-					},
-					{
-						failure: failure,
-						success: success
 					}
 				);
 			},
