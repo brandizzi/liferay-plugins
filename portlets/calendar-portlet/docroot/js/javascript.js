@@ -100,13 +100,16 @@ AUI.add(
 			NOTIFICATION_DEFAULT_TYPE: 'email',
 			PORTLET_NAMESPACE: STR_BLANK,
 			RENDERING_RULES_URL: null,
-			USER_TIMEZONE_OFFSET: 0,
+			USER_TIME_ZONE: 'UTC',
 
 			availableCalendars: {},
 			visibleCalendars: {},
 
 			addEvent: function(schedulerEvent, success) {
 				var instance = this;
+
+				var endDate = schedulerEvent.get('endDate');
+				var startDate = schedulerEvent.get('startDate');
 
 				instance.invokeService(
 					{
@@ -115,7 +118,11 @@ AUI.add(
 							calendarId: schedulerEvent.get('calendarId'),
 							childCalendarIds: STR_BLANK,
 							descriptionMap: instance.getLocalizationMap(schedulerEvent.get('description')),
-							endTime: CalendarUtil.toUTC(schedulerEvent.get('endDate')).getTime(),
+							endTimeDay: endDate.getDate(),
+							endTimeHour: endDate.getHours(),
+							endTimeMinute: endDate.getMinutes(),
+							endTimeMonth: endDate.getMonth(),
+							endTimeYear: endDate.getFullYear(),
 							firstReminder: schedulerEvent.get('firstReminder'),
 							firstReminderType: schedulerEvent.get('firstReminderType'),
 							location: schedulerEvent.get('location'),
@@ -123,7 +130,12 @@ AUI.add(
 							recurrence: schedulerEvent.get('recurrence'),
 							secondReminder: schedulerEvent.get('secondReminder'),
 							secondReminderType: schedulerEvent.get('secondReminderType'),
-							startTime: CalendarUtil.toUTC(schedulerEvent.get('startDate')).getTime(),
+							startTimeDay: startDate.getDate(),
+							startTimeHour: startDate.getHours(),
+							startTimeMinute: startDate.getMinutes(),
+							startTimeMonth: startDate.getMonth(),
+							startTimeYear: startDate.getFullYear(),
+							timeZoneId: instance.USER_TIME_ZONE,
 							titleMap: instance.getLocalizationMap(Liferay.Util.unescapeHTML(schedulerEvent.get('content')))
 						}
 					},
@@ -424,12 +436,12 @@ AUI.add(
 				var calendarBookingsURL = Lang.sub(
 					TPL_CALENDAR_BOOKINGS_URL,
 					{
+						calendarBookingsURL: instance.CALENDAR_BOOKINGS_URL,
 						calendarIds: calendarIds.join(','),
 						endTime: endDate.getTime(),
+						portletNamespace: instance.PORTLET_NAMESPACE,
 						startTime: startDate.getTime(),
-						statuses: status.join(','),
-						calendarBookingsURL: instance.CALENDAR_BOOKINGS_URL,
-						portletNamespace: instance.PORTLET_NAMESPACE
+						statuses: status.join(',')
 					}
 				);
 
@@ -438,11 +450,12 @@ AUI.add(
 					{
 						dataType: 'json',
 						on: {
-							success: function() {
-								success(this.get('responseData'));
-							},
 							failure: function() {
 								failure(this.get('responseData'));
+							},
+
+							success: function() {
+								success(this.get('responseData'));
 							}
 						}
 					}
@@ -626,14 +639,6 @@ AUI.add(
 			toLocalTime: function(utc) {
 				var instance = this;
 
-				var date = instance.toLocalTimeWithoutUserTimeZone(utc);
-
-				return DateMath.add(date, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
-			},
-
-			toLocalTimeWithoutUserTimeZone: function(utc) {
-				var instance = this;
-
 				if (!isDate(utc)) {
 					utc = new Date(utc);
 				}
@@ -642,14 +647,6 @@ AUI.add(
 			},
 
 			toUTC: function(date) {
-				var instance = this;
-
-				var utc = instance.toUTCWithoutUserTimeZone(date);
-
-				return DateMath.subtract(utc, DateMath.MINUTES, instance.USER_TIMEZONE_OFFSET / DateMath.ONE_MINUTE_MS);
-			},
-
-			toUTCWithoutUserTimeZone: function(date) {
 				var instance = this;
 
 				if (!isDate(date)) {
@@ -712,6 +709,9 @@ AUI.add(
 			updateEventInstance: function(schedulerEvent, allFollowing, success) {
 				var instance = this;
 
+				var endDate = schedulerEvent.get('endDate');
+				var startDate = schedulerEvent.get('startDate');
+
 				instance.invokeService(
 					{
 						'/calendar-portlet.calendarbooking/update-calendar-booking-instance': {
@@ -720,17 +720,25 @@ AUI.add(
 							calendarBookingId: schedulerEvent.get('calendarBookingId'),
 							calendarId: schedulerEvent.get('calendarId'),
 							descriptionMap: instance.getLocalizationMap(schedulerEvent.get('description')),
-							endTime: CalendarUtil.toUTC(schedulerEvent.get('endDate')).getTime(),
+							endTimeDay: endDate.getDate(),
+							endTimeHour: endDate.getHours(),
+							endTimeMinute: endDate.getMinutes(),
+							endTimeMonth: endDate.getMonth(),
+							endTimeYear: endDate.getFullYear(),
 							firstReminder: schedulerEvent.get('firstReminder'),
 							firstReminderType: schedulerEvent.get('firstReminderType'),
 							location: schedulerEvent.get('location'),
 							recurrence: schedulerEvent.get('recurrence'),
 							secondReminder: schedulerEvent.get('secondReminder'),
 							secondReminderType: schedulerEvent.get('secondReminderType'),
-							startTime: CalendarUtil.toUTC(schedulerEvent.get('startDate')).getTime(),
+							startTimeDay: startDate.getDate(),
+							startTimeHour: startDate.getHours(),
+							startTimeMinute: startDate.getMinutes(),
+							startTimeMonth: startDate.getMonth(),
+							startTimeYear: startDate.getFullYear(),
 							status: schedulerEvent.get('status'),
-							titleMap: instance.getLocalizationMap(Liferay.Util.unescapeHTML(schedulerEvent.get('content'))),
-							userId: USER_ID
+							timeZoneId: instance.USER_TIME_ZONE,
+							titleMap: instance.getLocalizationMap(Liferay.Util.unescapeHTML(schedulerEvent.get('content')))
 						}
 					},
 					{
