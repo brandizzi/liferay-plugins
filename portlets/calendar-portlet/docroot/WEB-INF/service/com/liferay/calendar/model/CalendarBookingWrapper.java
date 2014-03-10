@@ -1429,6 +1429,11 @@ public class CalendarBookingWrapper implements CalendarBooking,
 	}
 
 	@Override
+	public java.util.TimeZone getTimeZone() {
+		return _calendarBooking.getTimeZone();
+	}
+
+	@Override
 	public boolean isMasterBooking() {
 		return _calendarBooking.isMasterBooking();
 	}
