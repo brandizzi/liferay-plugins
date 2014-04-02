@@ -125,8 +125,6 @@
 						_onClickItems: function(event) {
 							var instance = this;
 
-							event.stopPropagation();
-
 							var items = instance.get('items');
 
 							var id = event.currentTarget.attr('data-id');
@@ -678,6 +676,15 @@
 							value: STR_BLANK
 						},
 
+						hoveredColor: {
+							setter: function(val) {
+								return val.toUpperCase();
+							},
+							validator: Lang.isString,
+							value: STR_BLANK
+						},
+
+
 						host: {
 							value: null
 						},
@@ -708,6 +715,8 @@
 							var contentBox = instance.get('contentBox');
 
 							contentBox.delegate('click', instance._onClickColor, STR_DOT + CSS_SIMPLE_COLOR_PICKER_ITEM, instance);
+							contentBox.delegate('mouseover', instance._onMouseOverColor, STR_DOT + CSS_SIMPLE_COLOR_PICKER_ITEM, instance);
+							contentBox.delegate('mouseout', instance._onMouseOutColor, STR_DOT + CSS_SIMPLE_COLOR_PICKER_ITEM, instance);
 						},
 
 						_onClickColor: function(event) {
@@ -717,6 +726,23 @@
 
 							instance.set('color', pallete[instance.items.indexOf(event.currentTarget)]);
 						},
+
+						_onMouseOverColor: function(event) {
+							var instance = this;
+
+							var pallete = instance.get('pallete');
+
+							instance.set('hoveredColor', pallete[instance.items.indexOf(event.currentTarget)]);
+						},
+
+						_onMouseOutColor: function(event) {
+							var instance = this;
+
+							var pallete = instance.get('pallete');
+
+							instance.set('hoveredColor', instance.get('color'));
+						},
+
 
 						_renderPallete: function() {
 							var instance = this;

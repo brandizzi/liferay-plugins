@@ -362,7 +362,7 @@ String backURL = PortalUtil.getCurrentURL(request);
 	<portlet:namespace />colorPicker = new Liferay.SimpleColorPicker(
 		{
 			on: {
-				colorChange: function(event) {
+				hoveredColorChange: function(event) {
 					var instance = this;
 
 					var simpleMenu = instance.get('host');
@@ -377,8 +377,6 @@ String backURL = PortalUtil.getCurrentURL(request);
 								silent: true
 							}
 						);
-
-						simpleMenu.set('visible', false);
 					}
 				}
 			},
