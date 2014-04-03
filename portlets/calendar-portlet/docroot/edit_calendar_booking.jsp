@@ -731,5 +731,28 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 		}
 	);
 
+	var endTimeDatePicker = Liferay.component('<portlet:namespace />endTimeDatePicker');
+
+	Liferay.component('<portlet:namespace />startTimeDatePicker').on(
+		'selectionChange',
+		function(event) {
+			var instance = this;
+
+			var newSelectedDates = event.newSelection;
+
+			if (newSelectedDates && (newSelectedDates.length > 0)) {
+				var prevStartTime = instance.getDate();
+				var newStartTime = newSelectedDates[0];
+
+				var endTime = endTimeDatePicker.getDate();
+				var duration = endTime.getTime() - 	prevStartTime.getTime();
+
+				endTimeDatePicker.useInputNode(A.one('#_1_WAR_calendarportlet_endTime'));
+				endTimeDatePicker.clearSelection();
+				endTimeDatePicker.selectDates([new Date(newStartTime.getTime() + duration)]);
+			}
+		}
+	);
+
 	scheduler.load();
 </aui:script>
