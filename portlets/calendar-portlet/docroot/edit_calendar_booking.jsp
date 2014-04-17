@@ -122,7 +122,7 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 	<aui:model-context bean="<%= calendarBooking %>" model="<%= CalendarBooking.class %>" />
 
 	<aui:fieldset>
-		<aui:input name="title" />
+		<aui:input name="title" defaultLanguageId="<%= themeDisplay.getLanguageId() %>" />
 
 		<div class="<%= allDay ? "allday-class-active" : "" %>" id="<portlet:namespace />startDateContainer">
 			<aui:input label="start-date" name="startTime" value="<%= startTimeJCalendar %>" />
@@ -373,7 +373,7 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 	String titleCurrentValue = ParamUtil.getString(request, "titleCurrentValue");
 	%>
 
-	<c:if test="<%= Validator.isNotNull(titleCurrentValue) %>">
+	<c:if test="<%= Validator.isNotNull(titleCurrentValue) && (calendarBooking == null || !Validator.equals(titleCurrentValue, calendarBooking.getTitle(locale))) %>">
 		var boundingBox = A.one('#<portlet:namespace />titleBoundingBox');
 
 		boundingBox.all('.field').each(
