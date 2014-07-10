@@ -2089,6 +2089,9 @@ AUI.add(
 
 						data.calendarBookingId = schedulerEvent.get('calendarBookingId');
 
+						data.endTime = CalendarUtil.toUTC(data.endTime).getTime();
+						data.startTime = CalendarUtil.toUTC(data.startTime).getTime();
+
 						Liferay.Util.openWindow(
 							{
 								dialog: {

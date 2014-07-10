@@ -173,6 +173,8 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 				<portlet:renderURL var="viewCalendarBookingURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<portlet:param name="mvcPath" value="/view_calendar_booking.jsp" />
 					<portlet:param name="calendarBookingId" value="{calendarBookingId}" />
+					<portlet:param name="endTime" value="{endTime}" />
+					<portlet:param name="startTime" value="{startTime}" />
 				</portlet:renderURL>
 
 				<liferay-util:param name="viewCalendarBookingURL" value="<%= viewCalendarBookingURL %>" />
