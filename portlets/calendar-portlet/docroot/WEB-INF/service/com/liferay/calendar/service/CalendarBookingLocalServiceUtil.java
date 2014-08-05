@@ -229,6 +229,29 @@ public class CalendarBookingLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
+	public static java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBooking(
+		com.liferay.calendar.model.CalendarBooking calendarBooking,
+		long startTime, long endTime, int maxSize) {
+		return getService()
+				   .expandCalendarBooking(calendarBooking, startTime, endTime,
+			maxSize);
+	}
+
+	public static java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBookings(
+		java.util.List<com.liferay.calendar.model.CalendarBooking> calendarBookings,
+		long startTime, long endTime) {
+		return getService()
+				   .expandCalendarBookings(calendarBookings, startTime, endTime);
+	}
+
+	public static java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBookings(
+		java.util.List<com.liferay.calendar.model.CalendarBooking> calendarBookings,
+		long startTime, long endTime, int maxSize) {
+		return getService()
+				   .expandCalendarBookings(calendarBookings, startTime,
+			endTime, maxSize);
+	}
+
 	public static java.lang.String exportCalendarBooking(
 		long calendarBookingId, java.lang.String type)
 		throws java.lang.Exception {

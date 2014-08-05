@@ -34,6 +34,7 @@ import java.util.List;
 /**
  * @author Marcellus Tavares
  */
+@Deprecated
 public class RecurrenceUtil {
 
 	/**

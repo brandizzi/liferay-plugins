@@ -34,6 +34,8 @@ public interface CalendarBooking extends CalendarBookingModel, PermissionedModel
 	public com.liferay.calendar.model.Calendar getCalendar()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> getCalendarBookingInstances();
+
 	public com.liferay.calendar.model.CalendarResource getCalendarResource()
 		throws com.liferay.portal.kernel.exception.PortalException;
 

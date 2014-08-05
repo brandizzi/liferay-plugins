@@ -196,6 +196,18 @@ public interface CalendarBookingLocalService extends BaseLocalService,
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
 		com.liferay.portal.kernel.dao.orm.Projection projection);
 
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBooking(
+		com.liferay.calendar.model.CalendarBooking calendarBooking,
+		long startTime, long endTime, int maxSize);
+
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBookings(
+		java.util.List<com.liferay.calendar.model.CalendarBooking> calendarBookings,
+		long startTime, long endTime);
+
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBookings(
+		java.util.List<com.liferay.calendar.model.CalendarBooking> calendarBookings,
+		long startTime, long endTime, int maxSize);
+
 	public java.lang.String exportCalendarBooking(long calendarBookingId,
 		java.lang.String type) throws java.lang.Exception;
 

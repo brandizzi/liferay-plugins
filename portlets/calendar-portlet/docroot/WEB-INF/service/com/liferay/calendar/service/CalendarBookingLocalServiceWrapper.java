@@ -237,6 +237,30 @@ public class CalendarBookingLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBooking(
+		com.liferay.calendar.model.CalendarBooking calendarBooking,
+		long startTime, long endTime, int maxSize) {
+		return _calendarBookingLocalService.expandCalendarBooking(calendarBooking,
+			startTime, endTime, maxSize);
+	}
+
+	@Override
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBookings(
+		java.util.List<com.liferay.calendar.model.CalendarBooking> calendarBookings,
+		long startTime, long endTime) {
+		return _calendarBookingLocalService.expandCalendarBookings(calendarBookings,
+			startTime, endTime);
+	}
+
+	@Override
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> expandCalendarBookings(
+		java.util.List<com.liferay.calendar.model.CalendarBooking> calendarBookings,
+		long startTime, long endTime, int maxSize) {
+		return _calendarBookingLocalService.expandCalendarBookings(calendarBookings,
+			startTime, endTime, maxSize);
+	}
+
+	@Override
 	public java.lang.String exportCalendarBooking(long calendarBookingId,
 		java.lang.String type) throws java.lang.Exception {
 		return _calendarBookingLocalService.exportCalendarBooking(calendarBookingId,

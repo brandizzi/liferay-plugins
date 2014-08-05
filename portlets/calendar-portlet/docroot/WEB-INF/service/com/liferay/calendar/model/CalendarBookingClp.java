@@ -1299,6 +1299,26 @@ public class CalendarBookingClp extends BaseModelImpl<CalendarBooking>
 	}
 
 	@Override
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> getCalendarBookingInstances() {
+		try {
+			String methodName = "getCalendarBookingInstances";
+
+			Class<?>[] parameterTypes = new Class<?>[] {  };
+
+			Object[] parameterValues = new Object[] {  };
+
+			java.util.List<com.liferay.calendar.model.CalendarBooking> returnObj =
+				(java.util.List<com.liferay.calendar.model.CalendarBooking>)invokeOnRemoteModel(methodName,
+					parameterTypes, parameterValues);
+
+			return returnObj;
+		}
+		catch (Exception e) {
+			throw new UnsupportedOperationException(e);
+		}
+	}
+
+	@Override
 	public int getInstanceIndex() {
 		try {
 			String methodName = "getInstanceIndex";

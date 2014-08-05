@@ -299,6 +299,11 @@ public class CalendarBookingWrapper implements CalendarBooking,
 		return _calendarBooking.getCalendarBookingId();
 	}
 
+	@Override
+	public java.util.List<com.liferay.calendar.model.CalendarBooking> getCalendarBookingInstances() {
+		return _calendarBooking.getCalendarBookingInstances();
+	}
+
 	/**
 	* Returns the calendar ID of this calendar booking.
 	*
