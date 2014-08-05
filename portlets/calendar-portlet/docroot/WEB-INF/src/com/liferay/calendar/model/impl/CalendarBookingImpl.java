@@ -23,9 +23,14 @@ import com.liferay.calendar.recurrence.RecurrenceSerializer;
 import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
 import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.service.CalendarResourceLocalServiceUtil;
+import com.liferay.calendar.util.CalendarBookingList;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSON;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
+
+import java.text.ParseException;
 
 import java.util.List;
 import java.util.TimeZone;
@@ -41,6 +46,17 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 	@Override
 	public Calendar getCalendar() throws PortalException {
 		return CalendarLocalServiceUtil.getCalendar(getCalendarId());
+	}
+
+	@Override
+	public List<CalendarBooking> getCalendarBookingInstances() {
+		try {
+			return new CalendarBookingList(this);
+		} catch (ParseException pe) {
+			_log.error("Unable to parse data ", pe);
+		}
+
+		return null;
 	}
 
 	@Override
@@ -123,6 +139,8 @@ public class CalendarBookingImpl extends CalendarBookingBaseImpl {
 	public void setInstanceIndex(int instanceIndex) {
 		_instanceIndex = instanceIndex;
 	}
+
+	private static Log _log = LogFactoryUtil.getLog(CalendarBookingImpl.class);
 
 	private int _instanceIndex;
 	private Recurrence _recurrenceObj;

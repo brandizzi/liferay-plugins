@@ -70,6 +70,7 @@ import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.social.model.SocialActivityConstants;
 import com.liferay.portlet.trash.model.TrashEntry;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -391,6 +392,63 @@ public class CalendarBookingLocalServiceImpl
 		for (CalendarBooking calendarBooking : calendarBookings) {
 			calendarBookingLocalService.deleteCalendarBooking(calendarBooking);
 		}
+	}
+
+	@Override
+	public List<CalendarBooking> expandCalendarBooking(
+		CalendarBooking calendarBooking, long startTime, long endTime,
+		int maxSize) {
+
+		List<CalendarBooking> expandedCalendarBookings =
+			new ArrayList<CalendarBooking>();
+
+			for (CalendarBooking newCalendarBooking :
+					calendarBooking.getCalendarBookingInstances()) {
+
+				if (newCalendarBooking.getEndTime() < startTime) {
+					continue;
+				}
+
+				if (newCalendarBooking.getStartTime() > endTime) {
+					break;
+				}
+
+				expandedCalendarBookings.add(newCalendarBooking);
+
+				if ((maxSize > 0) &&
+					(expandedCalendarBookings.size() >= maxSize)) {
+
+					break;
+				}
+			}
+
+		return expandedCalendarBookings;
+	}
+
+	@Override
+	public List<CalendarBooking> expandCalendarBookings(
+		List<CalendarBooking> calendarBookings, long startTime, long endTime) {
+
+		return expandCalendarBookings(calendarBookings, startTime, endTime, 0);
+	}
+
+	@Override
+	public List<CalendarBooking> expandCalendarBookings(
+		List<CalendarBooking> calendarBookings, long startTime, long endTime,
+		int maxSize) {
+
+		List<CalendarBooking> expandedCalendarBookings =
+			new ArrayList<CalendarBooking>();
+
+		for (CalendarBooking calendarBooking : calendarBookings) {
+			List<CalendarBooking> expandedCalendarBooking =
+				expandCalendarBooking(
+					calendarBooking, startTime, endTime, maxSize);
+
+			expandedCalendarBookings.addAll(expandedCalendarBooking);
+		}
+
+		return expandedCalendarBookings;
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import com.google.ical.values.DateValue;
 import com.google.ical.values.DateValueImpl;
 
 import com.liferay.calendar.model.CalendarBooking;
+import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -35,48 +36,31 @@ import java.util.List;
  */
 public class RecurrenceUtil {
 
+	/**
+	 * @deprecated Use {@link CalendarBookingLocalService.expandCalendarBooking(CalendarBooking, long, long, int)} instead.
+	 */
+	@Deprecated
 	public static List<CalendarBooking> expandCalendarBooking(
 		CalendarBooking calendarBooking, long startTime, long endTime,
 		int maxSize) {
 
-		List<CalendarBooking> expandedCalendarBookings =
-			new ArrayList<CalendarBooking>();
-
-		try {
-			CalendarBookingList calendarBookingList = new CalendarBookingList(
-				calendarBooking);
-
-			for (CalendarBooking newCalendarBooking : calendarBookingList) {
-				if (newCalendarBooking.getEndTime() < startTime) {
-					continue;
-				}
-
-				if (newCalendarBooking.getStartTime() > endTime) {
-					break;
-				}
-
-				expandedCalendarBookings.add(newCalendarBooking);
-
-				if ((maxSize > 0) &&
-					(expandedCalendarBookings.size() >= maxSize)) {
-
-					break;
-				}
-			}
-		}
-		catch (ParseException pe) {
-			_log.error("Unable to parse data ", pe);
-		}
-
-		return expandedCalendarBookings;
+		return CalendarBookingLocalServiceUtil.expandCalendarBooking(
+			calendarBooking, startTime, endTime, maxSize);
 	}
 
+	/**
+	 * @deprecated Use {@link CalendarBookingLocalService.expandCalendarBookings(CalendarBooking, long, long)} instead.
+	 */
+	@Deprecated
 	public static List<CalendarBooking> expandCalendarBookings(
 		List<CalendarBooking> calendarBookings, long startTime, long endTime) {
 
 		return expandCalendarBookings(calendarBookings, startTime, endTime, 0);
 	}
 
+	/**
+	 * @deprecated Use {@link CalendarBookingLocalService.expandCalendarBookings(CalendarBooking, long, long, int)} instead.
+	 */
 	public static List<CalendarBooking> expandCalendarBookings(
 		List<CalendarBooking> calendarBookings, long startTime, long endTime,
 		int maxSize) {
@@ -95,22 +79,33 @@ public class RecurrenceUtil {
 		return expandedCalendarBookings;
 	}
 
+	/**
+	 *
+	 * @param recurrence
+	 * @param recurrenceStartTime
+	 * @param instanceStartTime
+	 * @deprecated As of 7.0.0 Use {@link CalendarBooking.getCalendarBookingInstaces().get()} instead.
+	 * @return
+	 */
+	@Deprecated
 	public static CalendarBooking getCalendarBookingInstance(
 		CalendarBooking calendarBooking, int instanceIndex) {
 
-		try {
-			CalendarBookingList calendarBookingList = new CalendarBookingList(
-				calendarBooking);
+			List<CalendarBooking> calendarBookingList =
+				calendarBooking.getCalendarBookingInstances();
 
-					return calendarBookingList.get(instanceIndex);
-		}
-		catch (ParseException pe) {
-			_log.error("Unable to parse data ", pe);
-		}
-
-		return null;
+				return calendarBookingList.get(instanceIndex);
 	}
 
+	/**
+	 *
+	 * @param recurrence
+	 * @param recurrenceStartTime
+	 * @param instanceStartTime
+	 * @deprecated As of 7.0.0 Use {@link CalendarBooking.getInstanceIndex()} instead.
+	 * @return
+	 */
+	@Deprecated
 	public static int getIndexOfInstance(
 		String recurrence, long recurrenceStartTime, long instanceStartTime) {
 
