@@ -43,13 +43,10 @@ public class RecurrenceUtil {
 			new ArrayList<CalendarBooking>();
 
 		try {
-			CalendarBookingIterator calendarBookingIterator =
-				new CalendarBookingIterator(calendarBooking);
+			CalendarBookingList calendarBookingList = new CalendarBookingList(
+				calendarBooking);
 
-			while (calendarBookingIterator.hasNext()) {
-				CalendarBooking newCalendarBooking =
-					calendarBookingIterator.next();
-
+			for (CalendarBooking newCalendarBooking : calendarBookingList) {
 				if (newCalendarBooking.getEndTime() < startTime) {
 					continue;
 				}
@@ -102,19 +99,10 @@ public class RecurrenceUtil {
 		CalendarBooking calendarBooking, int instanceIndex) {
 
 		try {
-			CalendarBookingIterator calendarBookingIterator =
-				new CalendarBookingIterator(calendarBooking);
+			CalendarBookingList calendarBookingList = new CalendarBookingList(
+				calendarBooking);
 
-			while (calendarBookingIterator.hasNext()) {
-				CalendarBooking calendarBookingInstance =
-					calendarBookingIterator.next();
-
-				if (calendarBookingInstance.getInstanceIndex() ==
-						instanceIndex) {
-
-					return calendarBookingInstance;
-				}
-			}
+					return calendarBookingList.get(instanceIndex);
 		}
 		catch (ParseException pe) {
 			_log.error("Unable to parse data ", pe);
