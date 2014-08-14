@@ -96,6 +96,7 @@
 		<field name="description" type="String" localized="true">
 			<hint-collection name="TEXTAREA" />
 		</field>
+		<field name="timeZoneId" type="String" />
 		<field name="active" type="boolean" />
 	</model>
 </model-hints>

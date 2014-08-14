@@ -80,5 +80,6 @@ create table CalendarResource (
 	code_ VARCHAR(75) null,
 	name STRING null,
 	description STRING null,
+	timeZoneId VARCHAR(75) null,
 	active_ BOOLEAN
 );
