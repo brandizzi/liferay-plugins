@@ -129,65 +129,49 @@ if (recurrence != null) {
 			</div>
 		</div>
 	</div>
+
+	<div class="calendar-portlet-recurrence-view calendar-portlet-limit-view hide" id="<portlet:namespace />limitContainer">
+		<div class="calendar-portlet-recurrence-title">
+			<liferay-ui:message key="until" />:
+		</div>
+		<div class="calendar-portlet-recurrence-content">
+			<aui:field-wrapper cssClass="calendar-portlet-recurrence-limit" label="">
+				<aui:input checked="<%= !afterChecked && !onChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="forever" />
+
+				<label><liferay-ui:message key="never" /></label>
+			</aui:field-wrapper>
+
+			<aui:field-wrapper cssClass="calendar-portlet-recurrence-limit" label="">
+				<aui:input checked="<%= afterChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="day" />
+
+				<label><liferay-ui:message key="after" /></label>
+
+				<aui:input disabled="<%= !afterChecked %>" label="<%= StringPool.BLANK %>"  name="count" size="5" type="text" value="<%= afterChecked ? count : StringPool.BLANK %>" />
+
+				<label><liferay-ui:message key="times" /></label>
+			</aui:field-wrapper>
+
+			<aui:field-wrapper cssClass="calendar-portlet-field-date calendar-portlet-recurrence-limit" label="">
+				<aui:input checked="<%= onChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="on" />
+
+				<div class="calendar-portlet-field-datepicker clearfix">
+					<label><liferay-ui:message key="on" /></label>
+
+					<liferay-ui:input-date
+						dayParam="untilDateDay"
+						dayValue="<%= untilJCalendar.get(java.util.Calendar.DATE) %>"
+						disabled="<%= !onChecked %>"
+						monthParam="untilDateMonth"
+						monthValue="<%= untilJCalendar.get(java.util.Calendar.MONTH) %>"
+						name="untilDate"
+						yearParam="untilDateYear"
+						yearValue="<%= untilJCalendar.get(java.util.Calendar.YEAR) %>"
+					/>
+				</div>
+			</aui:field-wrapper>
+		</div>
+	</div>
 </div>
-
-<table id="<portlet:namespace />recurrenceContainer">
-	<tbody class="calendar-portlet-interval-view">
-		<tr>
-			<th class="calendar-portlet-recurrence-title">
-				<liferay-ui:message key="ends" />:
-			</th>
-			<td class="calendar-portlet-recurrence-content">
-				<aui:field-wrapper cssClass="calendar-portlet-recurrence-limit" label="">
-					<aui:input checked="<%= !afterChecked && !onChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="never" />
-
-					<label><liferay-ui:message key="never" /></label>
-				</aui:field-wrapper>
-
-				<aui:field-wrapper cssClass="calendar-portlet-recurrence-limit" label="">
-					<aui:input checked="<%= afterChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="after" />
-
-					<label><liferay-ui:message key="after" /></label>
-
-					<aui:input disabled="<%= !afterChecked %>" label="<%= StringPool.BLANK %>"  name="count" size="5" type="text" value="<%= afterChecked ? count : StringPool.BLANK %>" />
-
-					<label><liferay-ui:message key="occurrences" /></label>
-				</aui:field-wrapper>
-
-				<aui:field-wrapper cssClass="calendar-portlet-field-date calendar-portlet-recurrence-limit" label="">
-					<aui:input checked="<%= onChecked %>" label="<%= StringPool.BLANK %>" name="ends" type="radio" value="on" />
-
-					<div class="calendar-portlet-field-datepicker clearfix">
-						<label><liferay-ui:message key="on" /></label>
-
-						<liferay-ui:input-date
-							dayParam="untilDateDay"
-							dayValue="<%= untilJCalendar.get(java.util.Calendar.DATE) %>"
-							disabled="<%= !onChecked %>"
-							monthParam="untilDateMonth"
-							monthValue="<%= untilJCalendar.get(java.util.Calendar.MONTH) %>"
-							name="untilDate"
-							yearParam="untilDateYear"
-							yearValue="<%= untilJCalendar.get(java.util.Calendar.YEAR) %>"
-						/>
-					</div>
-				</aui:field-wrapper>
-			</td>
-		</tr>
-	</tbody>
-	<tbody class="calendar-portlet-interval-view">
-		<tr>
-			<th class="calendar-portlet-recurrence-title">
-				<liferay-ui:message key="summary" />:
-			</th>
-			<td class="calendar-portlet-recurrence-content">
-				<span class="calendar-portlet-recurrence-summary" id="<portlet:namespace />summaryPreview">
-					<liferay-ui:message key="none" />
-				</span>
-			</td>
-		</tr>
-	</tbody>
-</table>
 
 <aui:script use="liferay-util-window">
 	var countNode = A.one('#<portlet:namespace />count');
