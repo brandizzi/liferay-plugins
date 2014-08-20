@@ -64,61 +64,55 @@ if (recurrence != null) {
 }
 %>
 
-<table id="<portlet:namespace />recurrenceContainer">
+<span class="calendar-portlet-recurrence-summary" id="<portlet:namespace />summary"></span>
+
+<div class="calendar-portlet-recurrence-container" id="<portlet:namespace />recurrenceContainer">
 	<aui:input name="exceptionDates" type="hidden" value="<%= exceptionDatesString %>" />
 
-	<tbody>
-		<tr>
-			<th class="calendar-portlet-recurrence-title">
-				<liferay-ui:message key="repeats" />:
-			</th>
-			<td class="calendar-portlet-recurrence-content">
-				<aui:select label="" name="frequency">
+	<div class="calendar-portlet-recurrence-view calendar-portlet-frequency-view">
+		<div class="calendar-portlet-recurrence-title">
+			<liferay-ui:message key="repeats" />
+		</div>
+		<div class="calendar-portlet-recurrence-content">
 
-					<%
-					for (Frequency curFrequency : Frequency.values()) {
-					%>
+			<aui:input checked="<%= frequency == null %>" label="never" name="frequency" selected="<%= Validator.isNull(frequency) %>"  type="radio" value="NEVER" />
 
-						<aui:option selected="<%= (frequency == curFrequency) %>" value="<%= curFrequency.getValue() %>"><%= LanguageUtil.get(locale, StringUtil.toLowerCase(curFrequency.getValue())) %></aui:option>
+			<%
+			for (Frequency curFrequency : Frequency.values()) {
+			%>
 
-					<%
-					}
-					%>
+				<aui:input checked="<%= (frequency == curFrequency) %>"  label="<%= StringUtil.toLowerCase(curFrequency.getValue()) %>" name="frequency" type="radio" value="<%= curFrequency.getValue() %>" />
 
-				</aui:select>
-			</td>
-		</tr>
-	</tbody>
-	<tbody class="calendar-portlet-interval-view" id="<portlet:namespace />intervalContainer">
-		<tr>
-			<th class="calendar-portlet-recurrence-title">
-				<liferay-ui:message key="repeat-every" />:
-			</th>
-			<td class="calendar-portlet-recurrence-content">
-				<aui:select label="" name="interval">
+			<%
+			}
+			%>
 
-					<%
-					for (int i = 1; i <= 30; i++) {
-					%>
+		</div>
+	</div>
 
-						<aui:option selected="<%= (interval == i) %>" value="<%= i %>"><%= i %></aui:option>
+	<div class="calendar-portlet-recurrence-view calendar-portlet-interval-view hide" id="<portlet:namespace />intervalContainer">
+		<div class="calendar-portlet-recurrence-title">
+			<liferay-ui:message key="repeat-every" />
+		</div>
+		<div class="calendar-portlet-recurrence-content">
+			<aui:select label="" name="interval">
 
-					<%
-					}
-					%>
+				<%
+				for (int i = 1; i <= 30; i++) {
+				%>
 
-				</aui:select>
+					<aui:option selected="<%= (interval == i) %>" value="<%= i %>"><%= i %></aui:option>
 
-				<span id="<portlet:namespace />intervalLabel"></span>
-			</td>
-		</tr>
-	</tbody>
-	<tbody class="calendar-portlet-interval-view <%= (frequency == Frequency.WEEKLY) ? "" : "hide" %>" id="<portlet:namespace />view<%= Frequency.WEEKLY %>">
-		<tr>
-			<th class="calendar-portlet-recurrence-title">
-				<liferay-ui:message key="repeat-on" />:
-			</th>
-			<td class="calendar-portlet-recurrence-content calendar-recurrence-weekday-checkbox">
+				<%
+				}
+				%>
+
+			</aui:select>
+
+			<span id="<portlet:namespace />intervalLabel"></span>
+
+			<div class="calendar-portlet-interval-view <%= (frequency == Frequency.WEEKLY) ? "" : "hide" %>" id="<portlet:namespace />view<%= Frequency.WEEKLY %>">
+				<liferay-ui:message key="on" />:
 				<aui:field-wrapper inlineField="<%= true %>" label="">
 
 					<%
@@ -132,9 +126,12 @@ if (recurrence != null) {
 					%>
 
 				</aui:field-wrapper>
-			</td>
-		</tr>
-	</tbody>
+			</div>
+		</div>
+	</div>
+</div>
+
+<table id="<portlet:namespace />recurrenceContainer">
 	<tbody class="calendar-portlet-interval-view">
 		<tr>
 			<th class="calendar-portlet-recurrence-title">
@@ -195,7 +192,9 @@ if (recurrence != null) {
 <aui:script use="liferay-util-window">
 	var countNode = A.one('#<portlet:namespace />count');
 	var endsRadioNodes = A.all('[name=<portlet:namespace />ends]');
-	var frequencyNode = A.one('#<portlet:namespace />frequency');
+	var intervalContainerNode = A.one('#<portlet:namespace />intervalContainer');
+	var intervalLabelNode = intervalContainerNode.one('#<portlet:namespace />intervalLabel');
+	var limitContainerNode = A.one('#<portlet:namespace />limitContainer');
 	var recurrenceContainerNode = A.one('#<portlet:namespace />recurrenceContainer');
 	var summaryNode = A.one('#<portlet:namespace />summary');
 
@@ -204,8 +203,11 @@ if (recurrence != null) {
 	var onInputChange = function(event) {
 		var target = event.target;
 
-		if (target.test('#<portlet:namespace />frequency')) {
+		if (target.get('name') == '<portlet:namespace />frequency') {
+			intervalContainerNode.toggleClass('hide', (target.val() == 'NEVER'));
+			limitContainerNode.toggleClass('hide', (target.val() == 'NEVER'));
 			window.<portlet:namespace />toggleView('<%= Frequency.WEEKLY %>', (target.val() == '<%= Frequency.WEEKLY %>'));
+			window.<portlet:namespace />updateInterval(target.val());
 		}
 
 		var endValue = endsRadioNodes.filter(':checked').val()[0];
@@ -240,6 +242,7 @@ if (recurrence != null) {
 	);
 
 	window.<portlet:namespace />getSummary = function() {
+		var frequencyNode = A.one("input[name=<portlet:namespace/>frequency]:checked");
 		var intervalNode = A.one('#<portlet:namespace />interval');
 		var weekdays = A.all('#<portlet:namespace />view<%= Frequency.WEEKLY %> input:checked');
 
@@ -271,6 +274,22 @@ if (recurrence != null) {
 		}
 	};
 
+	window.<portlet:namespace />updateInterval = function(frequency) {
+
+		if (frequency == '<%= Frequency.DAILY %>') {
+		        intervalLabelNode.setHTML('<liferay-ui:message key="days" />');
+		}
+		else if (frequency == '<%= Frequency.WEEKLY %>') {
+		        intervalLabelNode.setHTML('<liferay-ui:message key="weeks" />');
+		}
+		else if (frequency == '<%= Frequency.MONTHLY %>') {
+		        intervalLabelNode.setHTML('<liferay-ui:message key="months" />');
+		}
+		else if (frequency == '<%= Frequency.YEARLY %>') {
+		        intervalLabelNode.setHTML('<liferay-ui:message key="years" />');
+		}
+	};
+
 	window.<portlet:namespace />updateSummary = function(element) {
 		var previewNode = A.one(element);
 
@@ -281,7 +300,6 @@ if (recurrence != null) {
 
 	window.<portlet:namespace />updateSummaries = function() {
 		window.<portlet:namespace />updateSummary(summaryNode);
-		window.<portlet:namespace />updateSummary('#<portlet:namespace />summaryPreview');
 	}
 
 	<c:if test="<%= recurring %>">
