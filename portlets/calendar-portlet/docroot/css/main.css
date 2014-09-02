@@ -26,7 +26,6 @@
 
 .calendar-list-empty-message {
 	color: #666;
-	margin-top: 4px;
 }
 
 .calendar-list-item {
@@ -117,28 +116,14 @@
 		}
 	}
 
+	.scheduler-base {
+		.scheduler-view-agenda, .scheduler-view-month, .scheduler-view-week, .scheduler-view-day {
+			padding-top: 45px;
+		}
+	}
+
 	.calendar-portlet-column-grid {
 		position: relative;
-
-		.calendar-portlet-column-toggler {
-			bottom: 0;
-			margin-left: -10px;
-			position: absolute;
-			top: 0;
-			width: 10px;
-
-			&:hover {
-				background: #E9E9E9;
-				cursor: pointer;
-			}
-
-			.icon-caret-right, .icon-caret-left {
-				left: 50%;
-				margin: -14px 0 0 -1px;
-				position: absolute;
-				top: 50%;
-			}
-		}
 
 		.scheduler-event {
 			z-index: 300;
@@ -165,6 +150,10 @@
 			}
 		}
 	}
+
+	.lfr-nav.nav-tabs {
+		margin-bottom: 12px;
+	}
 }
 
 .calendar-event-answer {
@@ -189,8 +178,8 @@
 	margin-left: 11px;
 
 	.calendar-portlet-add-calendars-input {
-		margin: 2px 0 5px;
-		padding: 5px 4px;
+		margin: 5px 0;
+		padding: 5px 10px;
 		width: 200px;
 	}
 }
@@ -267,6 +256,10 @@
 	position: relative;
 	text-decoration: none;
 
+	@include respond-to(phone, tablet) {
+		margin: 0;
+	}
+
 	&:hover {
 		background-color: #DCE3EA;
 		color: #222;
@@ -339,6 +332,186 @@
 	.scheduler-event-disabled {
 		@include opacity(0.8);
 	}
+
+	.btn, .btn-group {
+		width: auto;
+		display: inline-block;
+	}
+
+	.scheduler-base-hd {
+		@include respond-to(phone) {
+			padding: 0 0 5px 0;
+		}
+	}
+
+	.scheduler-base-controls {
+		width: 100%;
+
+		.btn {
+			margin: 0 8px 0 auto;
+			padding: 7px 15px;
+
+			@include respond-to(phone) {
+				float: right;
+				margin: 0 auto;
+				padding: 6px 0px;
+			}
+		}
+
+		.scheduler-base-view-date {
+			float: right;
+			margin: 10px 10px 0 10px;
+
+			@include respond-to(phone) {
+				border-bottom: 1px solid #cfcfcf;
+				border-top: 1px solid #cfcfcf;
+				float: none;
+				font-weight: bold;
+				height: 39px;
+				left: 0;
+				line-height: 39px;
+				margin: 0 auto;
+				overflow: hidden;
+				position: absolute;
+				right: 0;
+				text-align: center;
+				top: 52px;
+				vertical-align: middle;
+				width: calc(70% - 34px);
+			}
+		}
+
+		.glyphicon {
+			top: 0;
+		}
+
+		.scheduler-base-icon-next, .scheduler-base-icon-prev {
+			width: 50%;
+		}
+
+		.add-calendar-booking-text {
+			display: inline-block;
+
+			@include respond-to(phone) {
+				clip: rect(0 0 0 0);
+				height: 1px; width: 1px;
+				margin: -1px; padding: 0; border: 0;
+				overflow: hidden;
+				position: absolute;
+			}
+		}
+
+		.btn-group {
+			float: right;
+
+			@include respond-to(phone) {
+				margin: 0;
+				padding: 0;
+				position: absolute;
+				top: 52px;
+				width: calc(100% - 30px);
+			}
+
+			.btn {
+				margin-right: 0;
+
+				@include respond-to(phone) {
+					float: left;
+					width: 15%;
+				}
+			}
+
+			.scheduler-base-icon-prev {
+				@include respond-to(phone) {
+					margin-left: 7px;
+				}
+			}
+
+			.scheduler-base-icon-next {
+				@include respond-to(phone) {
+					float: right;
+					margin-right: 7px;
+				}
+			}
+		}
+	}
+
+	.scheduler-base-content .scheduler-base-views {
+		margin-top: 6px;
+
+		@include respond-to(phone) {
+			margin-top: 0;
+			width: 100%;
+
+			.btn {
+				margin-top: 0;
+				padding-left: 0;
+				padding-right: 0;
+				width: calc(25% - -0.7px)
+			}
+		}
+	}
+}
+
+.calendar-portlet-column-toggler {
+	bottom: 0;
+	margin-left: -10px;
+	position: absolute;
+	top: 0;
+	width: 10px;
+
+	&:hover {
+		background: #E9E9E9;
+		cursor: pointer;
+	}
+
+	.icon-caret-right, .icon-caret-left, .icon-caret-down, .icon-caret-up {
+		left: 50%;
+		margin: -14px 0 0 -1px;
+		position: absolute;
+		top: 50%;
+	}
+}
+
+.calendar-top-bar {
+	position: absolute;
+	right: 15px;
+	top: 42px;
+	width: calc(100% - 30px);
+
+	.btn {
+		float: right;
+		height: 32px;
+		margin: 0 0 0 5px;
+		padding: 0;
+		position: relative;
+		width: 15%;
+	}
+
+	.add-calendar-booking-text {
+		clip: rect(0 0 0 0);
+		height: 1px; width: 1px;
+		margin: -1px; padding: 0; border: 0;
+		overflow: hidden;
+		position: absolute;
+	}
+
+	.calendar-portlet-column-toggler {
+		.icon-caret-right, .icon-caret-left, .icon-caret-down, .icon-caret-up {
+			left: auto;
+			margin: auto;
+			position: relative;
+			top: 2px;
+		}
+	}
+}
+
+.view-lt480 .scheduler-base-today {
+	clip: rect(0 0 0 0);
+	height: 1px; width: 1px;
+	margin: -1px; padding: 0; border: 0;
+	overflow: hidden;
+	position: absolute;
 }
 
 .dialog-iframe-popup .calendar-portlet .fieldset {
@@ -357,6 +530,7 @@
 }
 
 .scheduler-base-controls .calendar-add-event-btn {
+	display: inline-block;
 	margin-right: 3px;
 }
 
@@ -495,12 +669,17 @@
 		border-width: 0;
 	}
 
+	.yui3-calendar-content {
+		padding: 0;
+	}
+
 	.yui3-calendar-weekday {
 		color: #4599E2;
+		text-align: center;
 	}
 
 	.yui3-calendar-day {
-		padding: 5px 0 10px;
+		padding: 7px 0;
 		width: 14.286%;
 	}
 

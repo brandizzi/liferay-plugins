@@ -38,11 +38,9 @@ AUI.add(
 
 		var ICON_ADD_EVENT_NODE = 'iconAddEventNode';
 
-		var TPL_ICON_ADD_EVENT_NODE = '<div class="btn-group">' +
-										'<button type="button" class="btn btn-primary calendar-add-event-btn">' +
+		var TPL_ICON_ADD_EVENT_NODE = '<button type="button" class="btn btn-primary calendar-add-event-btn"><span class="btn-icon icon icon-plus"></span> <div class="add-calendar-booking-text">' +
 											Liferay.Language.get('add-calendar-booking') +
-										'</div>' +
-									'</button>';
+									'</div></button>';
 
 		var TPL_MESSAGE_UPDATE_ALL_INVITED = '<p class="calendar-portlet-confirmation-text">' +
 												Liferay.Language.get('invited-users-will-be-notified') +
@@ -456,7 +454,7 @@ AUI.add(
 
 				instance.invokeService(
 					{
-						'/calendar-portlet.calendarbooking/has-child-calendar-bookings': {
+						'/calendar-portlet/calendarbooking/has-child-calendar-bookings': {
 							parentCalendarBookingId: schedulerEvent.get('calendarBookingId')
 						}
 					},

@@ -74,6 +74,52 @@ JSONArray otherCalendarsJSONArray = CalendarUtil.toCalendarsJSONArray(themeDispl
 boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, "calendar-portlet-column-options-visible", "true"));
 %>
 
+<aui:container cssClass="calendar-top-bar" />
+
+<aui:container cssClass="testaui">
+	<liferay-ui:icon-menu direction="down" icon="<%= StringPool.BLANK %>" localizeMessage="<%= true %>" message='<%= _getCurrentView(request, sessionClicksDefaultView) %>'>
+		<liferay-ui:icon
+			iconCssClass="<%= StringPool.BLANK %>"
+			localizeMessage="<%= true %>"
+			message="Day"
+			onClick="setView('day');"
+			url="javascript:;"
+		/>
+
+		<liferay-ui:icon
+			iconCssClass="<%= StringPool.BLANK %>"
+			localizeMessage="<%= true %>"
+			message="Week"
+			onClick="setView('week');"
+			url="javascript:;"
+		/>
+
+		<liferay-ui:icon
+			iconCssClass="<%= StringPool.BLANK %>"
+			localizeMessage="<%= true %>"
+			message="Month"
+			onClick="setView('month');"
+			url="javascript:;"
+		/>
+
+		<liferay-ui:icon
+			iconCssClass="<%= StringPool.BLANK %>"
+			localizeMessage="<%= true %>"
+			message="Agenda"
+			onClick="setView('agenda');"
+			url="javascript:;"
+		/>
+	</liferay-ui:icon-menu>
+</aui:container>
+
+<%!
+	private String _getCurrentView(HttpServletRequest request, String sessionClicksDefaultView) {
+	String test = ParamUtil.getString(request, "activeView", sessionClicksDefaultView);
+	System.out.println (test);
+		return  test;
+	}
+%>
+
 <aui:container cssClass="calendar-portlet-column-parent">
 	<aui:row>
 		<aui:col cssClass='<%= "calendar-portlet-column-options " + (columnOptionsVisible ? StringPool.BLANK : "hide") %>' id="columnOptions" span="<%= 3 %>">
@@ -185,6 +231,16 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 <%@ include file="/view_calendar_menus.jspf" %>
 
+<aui:script>
+	var setView = function(viewName) {
+		<portlet:namespace />scheduler.set('activeView',<portlet:namespace />scheduler.getViewByName(viewName));
+	};
+
+	var getViewNodes = function() {
+		return (<portlet:namespace />scheduler.get('viewsNode')._node.childNodes);
+	};
+</aui:script>
+
 <aui:script use="aui-toggler,liferay-calendar-list,liferay-scheduler,liferay-store,json">
 	Liferay.CalendarUtil.USER_CLASS_NAME_ID = <%= PortalUtil.getClassNameId(User.class) %>;
 
@@ -209,6 +265,93 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 		Liferay.CalendarUtil.syncCalendarsMap(calendarLists);
 	}
+
+	var win = A.getWin();
+	var togglerNode = A.one('.calendar-portlet-column-toggler');
+	var topBarNode = A.one('.calendar-top-bar');
+	var caretNode = null;
+	var groupMenuNode = A.one('.scheduler-base-views');
+	var isExpanded = A.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
+	var stateExpanded = isExpanded;
+	var stateMobile = false;
+
+	console.log(<portlet:namespace />scheduler.get('activeView'));
+	console.log(<portlet:namespace />scheduler.getViewByName('month'));
+	console.log(<portlet:namespace />scheduler.get('views'));
+	console.log((<portlet:namespace />scheduler.get('viewsNode')._node.childNodes[0] instanceof Node));
+	console.log(<portlet:namespace />scheduler.get('viewsNode')._node.childNodes.length);
+
+	var <portlet:namespace />collapseOnResize = function() {
+		if (win.width() < 992) {
+			caretNode = togglerNode.one('.icon-caret-right');
+			if (caretNode) caretNode.replaceClass('icon-caret-right', 'icon-caret-down');
+
+			caretNode = togglerNode.one('.icon-caret-left');
+			if (caretNode) caretNode.replaceClass('icon-caret-left', 'icon-caret-up');
+
+			togglerNode.addClass('btn');
+			togglerNode.addClass('btn-default');
+
+			topBarNode.appendChild(togglerNode);
+
+			stateMobile = true;
+		}
+		else if (stateMobile) {
+			caretNode = togglerNode.one('.icon-caret-down');
+			if (caretNode) caretNode.replaceClass('icon-caret-down', 'icon-caret-right');
+
+			caretNode = togglerNode.one('.icon-caret-up');
+			if (caretNode) caretNode.replaceClass('icon-caret-up', 'icon-caret-left');
+
+			togglerNode.removeClass('btn');
+			togglerNode.removeClass('btn-default');
+
+			A.one('.calendar-portlet-column-grid').insertBefore(togglerNode, A.one('.calendar-portlet-wrapper'))
+
+
+			stateMobile = false;
+		}
+
+		if (win.width() < 768) {
+			topBarNode.appendChild(A.one('.scheduler-base-today'));
+			topBarNode.appendChild(A.one('.calendar-add-event-btn'));
+
+			if (!groupMenuNode.hasClass('hide'))
+				groupMenuNode.addClass('hide');
+
+			if (isExpanded) {
+				stateExpanded = A.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
+				A.all('.calendar-portlet-list-header').replaceClass('toggler-header-expanded', 'toggler-header-collapsed');
+				A.all('.calendar-portlet-calendar-list').replaceClass(' toggler-content-expanded', ' toggler-content-collapsed');
+
+				isExpanded = !isExpanded;
+			}
+		}
+		else {
+			A.one('.scheduler-base-controls').insertBefore(A.one('.scheduler-base-today'), A.one('.scheduler-base-controls .btn-group'));
+			A.one('.scheduler-base-controls').insertBefore(A.one('.calendar-add-event-btn'), A.one('.scheduler-base-controls .scheduler-base-today'));
+
+			if (groupMenuNode.hasClass('hide'))
+				groupMenuNode.removeClass('hide');
+
+			if (!isExpanded) {
+				if (stateExpanded) {
+					A.all('.calendar-portlet-list-header').replaceClass('toggler-header-collapsed', 'toggler-header-expanded');
+					A.all('.calendar-portlet-calendar-list').replaceClass(' toggler-content-collapsed', ' toggler-content-expanded');
+				}
+
+				isExpanded = !isExpanded;
+			}
+		}
+	};
+
+	A.all('.glyphicon-chevron-left').replaceClass('glyphicon-chevron-left', 'icon-chevron-left')
+	A.all('.glyphicon-chevron-right').replaceClass('glyphicon-chevron-right', 'icon-chevron-right')
+
+	win.on(
+		['resize', 'load'],
+		A.debounce(<portlet:namespace />collapseOnResize, 100)
+	);
 
 	window.<portlet:namespace />syncCalendarsMap = syncCalendarsMap;
 
@@ -358,7 +501,13 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 			columnOptions.toggleClass('hide');
 
-			columnTogglerIcon.toggleClass('icon-caret-left').toggleClass('icon-caret-right');
+			if (columnTogglerIcon.hasClass('icon-caret-left') || columnTogglerIcon.hasClass('icon-caret-right')) {
+				columnTogglerIcon.toggleClass('icon-caret-left').toggleClass('icon-caret-right');
+			}
+
+			if (columnTogglerIcon.hasClass('icon-caret-up') || columnTogglerIcon.hasClass('icon-caret-down')) {
+				columnTogglerIcon.toggleClass('icon-caret-up').toggleClass('icon-caret-down');
+			}
 		}
 	);
 </aui:script>
