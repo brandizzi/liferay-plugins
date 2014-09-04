@@ -1913,6 +1913,27 @@ AUI.add(
 						}
 					},
 
+					_afterSchedulerChange: function(event) {
+						var instance = this;
+						var scheduler = event.newVal;
+						var schedulerBB = scheduler.get('boundingBox');
+
+						schedulerBB.delegate('click', A.bind(instance._onClickSchedulerEvent, instance), '.scheduler-view-agenda-event');
+						SchedulerEventRecorder.superclass._afterSchedulerChange.apply(this, arguments);
+					},
+
+					_onClickSchedulerEvent: function(event) {
+						var instance = this;
+						var evt = event.currentTarget.getData('scheduler-event');
+
+						if (!evt) {
+						    evt = event.currentTarget.getData('schedulerEvent');
+						    event.currentTarget.setData('scheduler-event', evt);
+						}
+
+						SchedulerEventRecorder.superclass._onClickSchedulerEvent.apply(this, arguments);
+					},
+
 					_getFooterToolbar: function() {
 						var instance = this;
 
