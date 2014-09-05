@@ -145,10 +145,6 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 
 			date: new Date(<%= dateYear %>, <%= dateMonth %>, <%= dateDay %>),
 
-			<c:if test="<%= !themeDisplay.isSignedIn() %>">
-				disabled: true,
-			</c:if>
-
 			eventRecorder: window.<portlet:namespace />eventRecorder,
 			filterCalendarBookings: window['<%= HtmlUtil.escapeJS(filterCalendarBookings) %>'],
 			firstDayOfWeek: <%= weekStartsOn %>,
