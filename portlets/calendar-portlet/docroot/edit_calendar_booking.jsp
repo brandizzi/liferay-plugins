@@ -458,67 +458,73 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 		}
 	);
 
-	var calendarsMenu = {
-		items: [
+	var calendarsMenuItems = [
+		{
+			caption: '<%= UnicodeLanguageUtil.get(request, "check-availability") %>',
+			fn: function(event) {
+				var instance = this;
+
+				A.each(
+					Liferay.CalendarUtil.availableCalendars,
+					function(item, index) {
+						item.set('visible', false);
+					}
+				);
+
+				var calendarList = instance.get('host');
+
+				calendarList.activeItem.set('visible', true);
+
+				<portlet:namespace />toggler.expand();
+
+				instance.hide();
+
+				return false;
+			},
+			id: 'check-availability'
+		}
+	];
+
+	<c:if test="<%= invitable %>">
+		calendarsMenuItems.push(
 			{
-				caption: '<%= UnicodeLanguageUtil.get(request, "check-availability") %>',
+				caption: '<%= UnicodeLanguageUtil.get(request, "remove") %>',
 				fn: function(event) {
 					var instance = this;
 
-					A.each(
-						Liferay.CalendarUtil.availableCalendars,
-						function(item, index) {
-							item.set('visible', false);
-						}
-					);
-
 					var calendarList = instance.get('host');
 
-					calendarList.activeItem.set('visible', true);
-
-					<portlet:namespace />toggler.expand();
-
-					instance.hide();
-
-					return false;
+					removeCalendarResource(calendarList, calendarList.activeItem, instance);
 				},
-				id: 'check-availability'
+				id: 'remove'
 			}
-			<c:if test="<%= invitable %>">
-				,{
-					caption: '<%= UnicodeLanguageUtil.get(request, "remove") %>',
-					fn: function(event) {
-						var instance = this;
+		);
+	</c:if>
 
-						var calendarList = instance.get('host');
+	var calendarsMenu = {
+		items: calendarsMenuItems
+	};
 
-						removeCalendarResource(calendarList, calendarList.activeItem, instance);
-					},
-					id: 'remove'
-				}
-			</c:if>
-		],
-		<c:if test="<%= invitable %>">
-			on: {
-				visibleChange: function(event) {
-					var instance = this;
+	<c:if test="<%= invitable %>">
+		calendarsMenu.on = {
+			visibleChange: function(event) {
+				var instance = this;
 
-					if (event.newVal) {
-						var calendarList = instance.get('host');
-						var calendar = calendarList.activeItem;
+				if (event.newVal) {
+					var calendarList = instance.get('host');
+					var calendar = calendarList.activeItem;
 
-						var hiddenItems = [];
+					var hiddenItems = [];
 
-						if (calendar.get('calendarId') === defaultCalendarId) {
-							hiddenItems.push('remove');
-						}
-
-						instance.set('hiddenItems', hiddenItems);
+					if (calendar.get('calendarId') === defaultCalendarId) {
+						hiddenItems.push('remove');
 					}
+
+					instance.set('hiddenItems', hiddenItems);
 				}
 			}
-		</c:if>
-	}
+		};
+	</c:if>
 
 	window.<portlet:namespace />calendarListPending = new Liferay.CalendarList(
 		{
