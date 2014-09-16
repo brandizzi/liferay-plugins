@@ -139,8 +139,7 @@ public interface CalendarBookingService extends BaseService, InvokableService {
 		throws com.liferay.portal.kernel.exception.PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public boolean hasChildCalendarBookings(long parentCalendarBookingId)
-		throws com.liferay.portal.kernel.exception.PortalException;
+	public boolean hasChildCalendarBookings(long parentCalendarBookingId);
 
 	@Override
 	public java.lang.Object invokeMethod(java.lang.String name,

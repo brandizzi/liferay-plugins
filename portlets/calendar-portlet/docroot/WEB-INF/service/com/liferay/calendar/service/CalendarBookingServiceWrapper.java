@@ -178,8 +178,7 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 	}
 
 	@Override
-	public boolean hasChildCalendarBookings(long parentCalendarBookingId)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public boolean hasChildCalendarBookings(long parentCalendarBookingId) {
 		return _calendarBookingService.hasChildCalendarBookings(parentCalendarBookingId);
 	}
 

@@ -174,8 +174,7 @@ public class CalendarBookingServiceUtil {
 			offset, duration);
 	}
 
-	public static boolean hasChildCalendarBookings(long parentCalendarBookingId)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static boolean hasChildCalendarBookings(long parentCalendarBookingId) {
 		return getService().hasChildCalendarBookings(parentCalendarBookingId);
 	}
 

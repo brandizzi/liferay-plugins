@@ -307,6 +307,11 @@ public class CalendarBookingLocalServiceUtil {
 		return getService().getCalendarBookingByUuidAndGroupId(uuid, groupId);
 	}
 
+	public static java.util.List<com.liferay.calendar.model.CalendarBooking> getCalendarBookingWithChildren(
+		com.liferay.calendar.model.CalendarBooking calendarBooking) {
+		return getService().getCalendarBookingWithChildren(calendarBooking);
+	}
+
 	public static java.util.List<com.liferay.calendar.model.CalendarBooking> getCalendarBookings(
 		long calendarId) {
 		return getService().getCalendarBookings(calendarId);

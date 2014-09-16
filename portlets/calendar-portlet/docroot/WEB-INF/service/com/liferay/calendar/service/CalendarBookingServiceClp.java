@@ -780,8 +780,7 @@ public class CalendarBookingServiceClp implements CalendarBookingService {
 	}
 
 	@Override
-	public boolean hasChildCalendarBookings(long parentCalendarBookingId)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public boolean hasChildCalendarBookings(long parentCalendarBookingId) {
 		Object returnObj = null;
 
 		try {
@@ -791,10 +790,6 @@ public class CalendarBookingServiceClp implements CalendarBookingService {
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
