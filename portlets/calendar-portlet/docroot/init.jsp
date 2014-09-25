@@ -122,6 +122,7 @@ page import="java.util.TimeZone" %>
 <%
 String currentURL = PortalUtil.getCurrentURL(request);
 
+CalendarResource globalCalendarResource = CalendarResourceUtil.getGroupCalendarResource(liferayPortletRequest, company.getGroupId());
 CalendarResource groupCalendarResource = CalendarResourceUtil.getGroupCalendarResource(liferayPortletRequest, scopeGroupId);
 CalendarResource userCalendarResource = CalendarResourceUtil.getUserCalendarResource(liferayPortletRequest, themeDisplay.getUserId());
 
