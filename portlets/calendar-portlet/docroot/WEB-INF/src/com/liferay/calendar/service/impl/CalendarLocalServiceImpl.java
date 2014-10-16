@@ -65,11 +65,6 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 				serviceContext.getUserId());
 		}
 
-		if (user == null) {
-			user = userLocalService.getDefaultUser(
-				serviceContext.getCompanyId());
-		}
-
 		if (color <= 0) {
 			color = PortletPropsValues.CALENDAR_COLOR_DEFAULT;
 		}
