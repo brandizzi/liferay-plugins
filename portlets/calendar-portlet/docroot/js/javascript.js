@@ -1022,6 +1022,17 @@ AUI.add(
 						return (instance.get('recurrence') !== STR_BLANK);
 					},
 
+					setContent: function() {
+						var instance = this;
+
+						Liferay.SchedulerEvent.superclass.setContent.apply(instance, arguments);
+
+						var node = instance.get('node');
+
+						node.attr('title', instance.get('content'));
+						console.log("11111");
+					},
+
 					syncNodeColorUI: function() {
 						var instance = this;
 
@@ -2140,6 +2151,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['async-queue', 'aui-datatype', 'aui-io', 'aui-scheduler', 'aui-toolbar', 'autocomplete', 'autocomplete-highlighters', 'dd-plugin', 'liferay-calendar-message-util', 'liferay-calendar-recurrence-util', 'liferay-node', 'liferay-portlet-url', 'liferay-store', 'promise', 'resize-plugin']
+		requires: ['async-queue', 'aui-datatype', 'aui-io', 'aui-scheduler', 'aui-toolbar', 'aui-tooltip', 'autocomplete', 'autocomplete-highlighters', 'dd-plugin', 'liferay-calendar-message-util', 'liferay-calendar-recurrence-util', 'liferay-node', 'liferay-portlet-url', 'liferay-store', 'promise', 'resize-plugin']
 	}
 );
