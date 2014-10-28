@@ -390,8 +390,26 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 		<portlet:namespace />miniCalendar.set('date', viewDate);
 	};
 
-	window.<portlet:namespace />refreshSchedulerEventTooltipTitle = function(schedulerEvent) {
-		schedulerEvent.get('node').attr('title', A.Lang.String.unescapeHTML(schedulerEvent.get('content')));
+	window.<portlet:namespace />refreshSchedulerEventTooltip= function(schedulerEvent) {
+		var calendar = Liferay.CalendarUtil.availableCalendars[schedulerEvent.get('calendarId')];
+		var node = schedulerEvent.get('node');
+		var title = schedulerEvent.get('content');
+		var tooltipBuffer = [];
+
+		if (title) {
+			tooltipBuffer.push(A.Lang.String.unescapeHTML(title));
+		}
+		if (calendar) {
+			if (title) {
+				tooltipBuffer.push(' - ');
+			}
+
+			tooltipBuffer.push(calendar.getDisplayName());
+		}
+
+		if (tooltipBuffer.length > 0) {
+			node.attr('title', tooltipBuffer.join(''));
+		}
 	};
 
 	window.<portlet:namespace />refreshVisibleCalendarRenderingRules = function() {
@@ -457,7 +475,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 	);
 
 	<portlet:namespace />scheduler.after(['scheduler-events:load'], function(event) {
-		event.currentTarget.eachEvent(<portlet:namespace />refreshSchedulerEventTooltipTitle);
+		event.currentTarget.eachEvent(<portlet:namespace />refreshSchedulerEventTooltip);
 	});
 
 	<portlet:namespace />scheduler.after(
