@@ -32,9 +32,7 @@ import com.liferay.calendar.util.JCalendarUtil;
 import com.liferay.calendar.util.NotificationUtil;
 import com.liferay.calendar.util.PortletPropsValues;
 import com.liferay.calendar.util.RecurrenceUtil;
-import com.liferay.calendar.workflow.CalendarBookingApprovalWorkflow;
 import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -1154,9 +1152,6 @@ public class CalendarBookingLocalServiceImpl
 			throw new CalendarBookingDurationException();
 		}
 	}
-
-	@BeanReference(type = CalendarBookingApprovalWorkflow.class)
-	protected CalendarBookingApprovalWorkflow calendarBookingApprovalWorkflow;
 
 	private static Log _log = LogFactoryUtil.getLog(
 		CalendarBookingLocalServiceImpl.class);
