@@ -35,7 +35,6 @@ import com.liferay.portal.security.ac.AccessControlled;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -331,8 +330,9 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			ActionKeys.MANAGE_BOOKINGS);
 
-		calendarBookingApprovalWorkflow.invokeTransition(
-			getUserId(), calendarBooking, status, serviceContext);
+		calendarBookingLocalService.updateStatus(
+			serviceContext.getUserId(), calendarBooking, status,
+			serviceContext);
 	}
 
 	@Override

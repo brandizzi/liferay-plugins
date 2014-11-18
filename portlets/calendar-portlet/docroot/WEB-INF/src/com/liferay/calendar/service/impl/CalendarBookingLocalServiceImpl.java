@@ -60,6 +60,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.SystemEventConstants;
@@ -199,8 +200,10 @@ public class CalendarBookingLocalServiceImpl
 
 		// Workflow
 
-		calendarBookingApprovalWorkflow.startWorkflow(
-			userId, calendarBooking, serviceContext);
+		WorkflowHandlerRegistryUtil.startWorkflowInstance(
+			user.getCompanyId(), calendarBooking.getGroupId(), userId,
+			CalendarBooking.class.getName(), calendarBookingId, calendarBooking,
+			serviceContext);
 
 		return calendarBooking;
 	}
@@ -794,8 +797,10 @@ public class CalendarBookingLocalServiceImpl
 
 		// Workflow
 
-		calendarBookingApprovalWorkflow.invokeTransition(
-			userId, calendarBooking, status, serviceContext);
+		WorkflowHandlerRegistryUtil.startWorkflowInstance(
+			user.getCompanyId(), calendarBooking.getGroupId(), userId,
+			CalendarBooking.class.getName(), calendarBookingId, calendarBooking,
+			serviceContext);
 
 		return calendarBooking;
 	}
