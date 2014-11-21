@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
@@ -43,6 +44,7 @@ import com.liferay.portal.model.Subscription;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -165,6 +167,39 @@ public class CalendarImporterLocalServiceImpl
 			});
 
 		actionableDynamicQuery.performActions();
+	}
+
+	@Override
+	public void importRolePermissions() throws PortalException {
+		long[] companyIds = PortalUtil.getCompanyIds();
+
+		String[][] renameClassNamesArray = {
+			new String[] {
+				"com.liferay.portlet.calendar",
+				"com.liferay.calendar.model.Calendar"
+			},
+			new String[] {
+				"com.liferay.portlet.calendar.model.CalEvent",
+				"com.liferay.calendar.model.CalendarBooking"
+			},
+		};
+
+		for (String[] renameClassNames : renameClassNamesArray) {
+			String oldClassName = renameClassNames[0];
+			String newClassName = renameClassNames[1];
+
+			for (long companyId : companyIds) {
+				importResourcePermissions(
+					companyId, oldClassName, newClassName,
+					ResourceConstants.SCOPE_COMPANY);
+				importResourcePermissions(
+					companyId, oldClassName, newClassName,
+					ResourceConstants.SCOPE_GROUP);
+				importResourcePermissions(
+					companyId, oldClassName, newClassName,
+					ResourceConstants.SCOPE_GROUP_TEMPLATE);
+			}
+		}
 	}
 
 	protected void addAssetEntry(
@@ -938,6 +973,35 @@ public class CalendarImporterLocalServiceImpl
 			counterLocalService.increment(), classNameId, classPK,
 			ratingsStats.getTotalEntries(), ratingsStats.getTotalScore(),
 			ratingsStats.getAverageScore());
+	}
+
+	protected void importResourcePermissions(
+			long companyId, String oldClassName, String newClassName, int scope)
+		throws PortalException {
+
+		List<ResourcePermission> resourcePermissions =
+			resourcePermissionPersistence.findByC_N_S(
+				companyId, oldClassName, scope);
+
+		for (ResourcePermission resourcePermission : resourcePermissions) {
+			long actionIds = getActionIds(
+				resourcePermission, oldClassName, newClassName);
+
+			if (scope == ResourceConstants.SCOPE_GROUP) {
+				resourceBlockLocalService.addGroupScopePermissions(
+					companyId,
+					GetterUtil.getLong(resourcePermission.getPrimKey()),
+					newClassName, resourcePermission.getRoleId(), actionIds);
+			}
+			else {
+				resourceBlockLocalService.addCompanyScopePermissions(
+					companyId, newClassName, resourcePermission.getRoleId(),
+					actionIds);
+			}
+
+			resourcePermissionPersistence.remove(
+				resourcePermission.getResourcePermissionId());
+		}
 	}
 
 	protected void importSocialActivities(
