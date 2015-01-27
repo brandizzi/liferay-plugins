@@ -24,6 +24,9 @@ public class PortletPropsKeys {
 	public static final String CALENDAR_AUTO_APPROVE_GROUP_EVENT =
 		"calendar.auto.approve.group.event";
 
+	public static final String CALENDAR_AUTO_APPROVE_GROUP_EVENT_ANYUSER =
+		"calendar.auto.approve.group.event.anyuser";
+
 	public static final String CALENDAR_COLOR_DEFAULT =
 		"calendar.color.default";
 

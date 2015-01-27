@@ -30,6 +30,11 @@ public class PortletPropsValues {
 			PortletProps.get(
 				PortletPropsKeys.CALENDAR_AUTO_APPROVE_GROUP_EVENT));
 
+	public static final boolean CALENDAR_AUTO_APPROVE_GROUP_EVENT_ANYUSER =
+		GetterUtil.getBoolean(
+			PortletProps.get(
+				PortletPropsKeys.CALENDAR_AUTO_APPROVE_GROUP_EVENT_ANYUSER));
+
 	public static final int CALENDAR_COLOR_DEFAULT = Integer.decode(
 		PortletProps.get(PortletPropsKeys.CALENDAR_COLOR_DEFAULT));
 
