@@ -110,15 +110,21 @@ public class CalendarBookingApprovalWorkflowImpl
 			return false;
 		}
 
+		CalendarResource calendarResource =
+			calendarBooking.getCalendarResource();
+
+		if (PortletPropsValues.CALENDAR_AUTO_APPROVE_GROUP_EVENT_ANYUSER &&
+			calendarResource.isGroup()) {
+
+			return true;
+		}
+
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
 
 		if (permissionChecker == null) {
 			return false;
 		}
-
-		CalendarResource calendarResource =
-			calendarBooking.getCalendarResource();
 
 		if (PortletPropsValues.CALENDAR_AUTO_APPROVE_GROUP_EVENT &&
 			calendarResource.isGroup() &&
