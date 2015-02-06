@@ -65,7 +65,7 @@ import java.util.Set;
  *
  * @author Eduardo Lundgren
  * @see CalendarBookingPersistence
- * @see CalendarBookingUtil
+ * @see com.liferay.calendar.service.persistence.CalendarBookingUtil
  * @generated
  */
 @ProviderType
@@ -5787,6 +5787,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 		calendarBookingImpl.setCalendarId(calendarBooking.getCalendarId());
 		calendarBookingImpl.setCalendarResourceId(calendarBooking.getCalendarResourceId());
 		calendarBookingImpl.setParentCalendarBookingId(calendarBooking.getParentCalendarBookingId());
+		calendarBookingImpl.setVEventUid(calendarBooking.getVEventUid());
 		calendarBookingImpl.setTitle(calendarBooking.getTitle());
 		calendarBookingImpl.setDescription(calendarBooking.getDescription());
 		calendarBookingImpl.setLocation(calendarBooking.getLocation());
@@ -5802,7 +5803,6 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 		calendarBookingImpl.setStatusByUserId(calendarBooking.getStatusByUserId());
 		calendarBookingImpl.setStatusByUserName(calendarBooking.getStatusByUserName());
 		calendarBookingImpl.setStatusDate(calendarBooking.getStatusDate());
-		calendarBookingImpl.setVEventUid(calendarBooking.getVEventUid());
 
 		return calendarBookingImpl;
 	}

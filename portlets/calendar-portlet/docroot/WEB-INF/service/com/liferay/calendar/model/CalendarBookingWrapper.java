@@ -66,6 +66,7 @@ public class CalendarBookingWrapper implements CalendarBooking,
 		attributes.put("calendarId", getCalendarId());
 		attributes.put("calendarResourceId", getCalendarResourceId());
 		attributes.put("parentCalendarBookingId", getParentCalendarBookingId());
+		attributes.put("vEventUid", getVEventUid());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("location", getLocation());
@@ -81,7 +82,6 @@ public class CalendarBookingWrapper implements CalendarBooking,
 		attributes.put("statusByUserId", getStatusByUserId());
 		attributes.put("statusByUserName", getStatusByUserName());
 		attributes.put("statusDate", getStatusDate());
-		attributes.put("vEventUid", getVEventUid());
 
 		return attributes;
 	}
@@ -159,6 +159,12 @@ public class CalendarBookingWrapper implements CalendarBooking,
 
 		if (parentCalendarBookingId != null) {
 			setParentCalendarBookingId(parentCalendarBookingId);
+		}
+
+		String vEventUid = (String)attributes.get("vEventUid");
+
+		if (vEventUid != null) {
+			setVEventUid(vEventUid);
 		}
 
 		String title = (String)attributes.get("title");
@@ -249,12 +255,6 @@ public class CalendarBookingWrapper implements CalendarBooking,
 
 		if (statusDate != null) {
 			setStatusDate(statusDate);
-		}
-
-		String vEventUid = (String)attributes.get("vEventUid");
-
-		if (vEventUid != null) {
-			setVEventUid(vEventUid);
 		}
 	}
 

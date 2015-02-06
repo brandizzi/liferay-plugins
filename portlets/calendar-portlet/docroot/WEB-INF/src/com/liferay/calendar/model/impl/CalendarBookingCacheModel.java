@@ -92,6 +92,8 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		sb.append(calendarResourceId);
 		sb.append(", parentCalendarBookingId=");
 		sb.append(parentCalendarBookingId);
+		sb.append(", vEventUid=");
+		sb.append(vEventUid);
 		sb.append(", title=");
 		sb.append(title);
 		sb.append(", description=");
@@ -122,8 +124,6 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		sb.append(statusByUserName);
 		sb.append(", statusDate=");
 		sb.append(statusDate);
-		sb.append(", vEventUid=");
-		sb.append(vEventUid);
 		sb.append("}");
 
 		return sb.toString();
@@ -170,6 +170,13 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		calendarBookingImpl.setCalendarId(calendarId);
 		calendarBookingImpl.setCalendarResourceId(calendarResourceId);
 		calendarBookingImpl.setParentCalendarBookingId(parentCalendarBookingId);
+
+		if (vEventUid == null) {
+			calendarBookingImpl.setVEventUid(StringPool.BLANK);
+		}
+		else {
+			calendarBookingImpl.setVEventUid(vEventUid);
+		}
 
 		if (title == null) {
 			calendarBookingImpl.setTitle(StringPool.BLANK);
@@ -238,13 +245,6 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 			calendarBookingImpl.setStatusDate(new Date(statusDate));
 		}
 
-		if (vEventUid == null) {
-			calendarBookingImpl.setVEventUid(StringPool.BLANK);
-		}
-		else {
-			calendarBookingImpl.setVEventUid(vEventUid);
-		}
-
 		calendarBookingImpl.resetOriginalValues();
 
 		return calendarBookingImpl;
@@ -264,6 +264,7 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		calendarId = objectInput.readLong();
 		calendarResourceId = objectInput.readLong();
 		parentCalendarBookingId = objectInput.readLong();
+		vEventUid = objectInput.readUTF();
 		title = objectInput.readUTF();
 		description = objectInput.readUTF();
 		location = objectInput.readUTF();
@@ -279,7 +280,6 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		statusByUserId = objectInput.readLong();
 		statusByUserName = objectInput.readUTF();
 		statusDate = objectInput.readLong();
-		vEventUid = objectInput.readUTF();
 	}
 
 	@Override
@@ -310,6 +310,13 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		objectOutput.writeLong(calendarId);
 		objectOutput.writeLong(calendarResourceId);
 		objectOutput.writeLong(parentCalendarBookingId);
+
+		if (vEventUid == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(vEventUid);
+		}
 
 		if (title == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -372,13 +379,6 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 		}
 
 		objectOutput.writeLong(statusDate);
-
-		if (vEventUid == null) {
-			objectOutput.writeUTF(StringPool.BLANK);
-		}
-		else {
-			objectOutput.writeUTF(vEventUid);
-		}
 	}
 
 	public String uuid;
@@ -393,6 +393,7 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 	public long calendarId;
 	public long calendarResourceId;
 	public long parentCalendarBookingId;
+	public String vEventUid;
 	public String title;
 	public String description;
 	public String location;
@@ -408,5 +409,4 @@ public class CalendarBookingCacheModel implements CacheModel<CalendarBooking>,
 	public long statusByUserId;
 	public String statusByUserName;
 	public long statusDate;
-	public String vEventUid;
 }

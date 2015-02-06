@@ -31,6 +31,7 @@ create table CalendarBooking (
 	calendarId LONG,
 	calendarResourceId LONG,
 	parentCalendarBookingId LONG,
+	vEventUid VARCHAR(255) null,
 	title STRING null,
 	description TEXT null,
 	location STRING null,
@@ -45,8 +46,7 @@ create table CalendarBooking (
 	status INTEGER,
 	statusByUserId LONG,
 	statusByUserName VARCHAR(75) null,
-	statusDate DATE null,
-	vEventUid VARCHAR(255) null
+	statusDate DATE null
 );
 
 create table CalendarNotificationTemplate (
