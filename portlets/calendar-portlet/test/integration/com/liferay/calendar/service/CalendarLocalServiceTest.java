@@ -14,9 +14,17 @@
 
 package com.liferay.calendar.service;
 
-import org.jboss.arquillian.junit.Arquillian;
+import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
+import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.User;
+import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,6 +34,12 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class CalendarLocalServiceTest {
 
+	@Before
+	public void setUp() throws Exception {
+		_user = UserTestUtil.addUser();
+		_group = GroupTestUtil.addGroup();
+	}
+
 	@Test
 	public void testGetCalendarsCount() {
 		int count = CalendarLocalServiceUtil.getCalendarsCount();
@@ -33,4 +47,12 @@ public class CalendarLocalServiceTest {
 		Assert.assertEquals(0, count);
 	}
 
+	@Rule
+	public LiferayIntegrationTestRule liferayIntegrationTestRule =
+		new LiferayIntegrationTestRule();
+
+	@DeleteAfterTestRun
+	private User _user;
+	@DeleteAfterTestRun
+	private Group _group;
 }
