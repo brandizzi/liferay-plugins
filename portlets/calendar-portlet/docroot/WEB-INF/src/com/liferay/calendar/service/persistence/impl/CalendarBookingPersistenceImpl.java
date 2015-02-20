@@ -65,7 +65,7 @@ import java.util.Set;
  *
  * @author Eduardo Lundgren
  * @see CalendarBookingPersistence
- * @see CalendarBookingUtil
+ * @see com.liferay.calendar.service.persistence.CalendarBookingUtil
  * @generated
  */
 @ProviderType
