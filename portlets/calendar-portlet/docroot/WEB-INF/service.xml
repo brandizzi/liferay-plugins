@@ -31,7 +31,6 @@
 		<column name="calendarResourceId" type="long" />
 		<column name="name" type="String" localized="true" />
 		<column name="description" type="String" localized="true" />
-		<column name="timeZoneId" type="String" />
 		<column name="color" type="int" />
 		<column name="defaultCalendar" type="boolean" />
 		<column name="enableComments" type="boolean" />
