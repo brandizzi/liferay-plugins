@@ -142,28 +142,25 @@ public class CalendarStagedModelDataHandler
 				importedCalendar = CalendarLocalServiceUtil.addCalendar(
 					userId, portletDataContext.getScopeGroupId(),
 					calendarResourceId, calendarNameMap,
-					calendar.getDescriptionMap(), calendar.getTimeZoneId(),
-					calendar.getColor(), calendar.isDefaultCalendar(),
-					calendar.isEnableComments(), calendar.isEnableRatings(),
-					serviceContext);
+					calendar.getDescriptionMap(), calendar.getColor(),
+					calendar.isDefaultCalendar(), calendar.isEnableComments(),
+					calendar.isEnableRatings(), serviceContext);
 			}
 			else {
 				importedCalendar = CalendarLocalServiceUtil.updateCalendar(
 					existingCalendar.getCalendarId(), calendar.getNameMap(),
-					calendar.getDescriptionMap(), calendar.getTimeZoneId(),
-					calendar.getColor(), calendar.isDefaultCalendar(),
-					calendar.isEnableComments(), calendar.isEnableRatings(),
-					serviceContext);
+					calendar.getDescriptionMap(), calendar.getColor(),
+					calendar.isDefaultCalendar(), calendar.isEnableComments(),
+					calendar.isEnableRatings(), serviceContext);
 			}
 		}
 		else {
 			importedCalendar = CalendarLocalServiceUtil.addCalendar(
 				userId, portletDataContext.getScopeGroupId(),
 				calendarResourceId, calendarNameMap,
-				calendar.getDescriptionMap(), calendar.getTimeZoneId(),
-				calendar.getColor(), calendar.isDefaultCalendar(),
-				calendar.isEnableComments(), calendar.isEnableRatings(),
-				serviceContext);
+				calendar.getDescriptionMap(), calendar.getColor(),
+				calendar.isDefaultCalendar(), calendar.isEnableComments(),
+				calendar.isEnableRatings(), serviceContext);
 		}
 
 		portletDataContext.importClassedModel(calendar, importedCalendar);
