@@ -51,9 +51,8 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 	public Calendar addCalendar(
 			long userId, long groupId, long calendarResourceId,
 			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
-			String timeZoneId, int color, boolean defaultCalendar,
-			boolean enableComments, boolean enableRatings,
-			ServiceContext serviceContext)
+			int color, boolean defaultCalendar, boolean enableComments,
+			boolean enableRatings, ServiceContext serviceContext)
 		throws PortalException {
 
 		// Calendar
@@ -82,7 +81,6 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 		calendar.setCalendarResourceId(calendarResourceId);
 		calendar.setNameMap(nameMap);
 		calendar.setDescriptionMap(descriptionMap);
-		calendar.setTimeZoneId(timeZoneId);
 		calendar.setColor(color);
 		calendar.setDefaultCalendar(defaultCalendar);
 		calendar.setEnableComments(enableComments);
@@ -249,22 +247,6 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 	public Calendar updateCalendar(
 			long calendarId, Map<Locale, String> nameMap,
 			Map<Locale, String> descriptionMap, int color,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		Calendar calendar = calendarPersistence.findByPrimaryKey(calendarId);
-
-		return calendarLocalService.updateCalendar(
-			calendarId, nameMap, descriptionMap, calendar.getTimeZoneId(),
-			color, calendar.isDefaultCalendar(), calendar.isEnableComments(),
-			calendar.isEnableRatings(), serviceContext);
-	}
-
-	@Indexable(type = IndexableType.REINDEX)
-	@Override
-	public Calendar updateCalendar(
-			long calendarId, Map<Locale, String> nameMap,
-			Map<Locale, String> descriptionMap, String timeZoneId, int color,
 			boolean defaultCalendar, boolean enableComments,
 			boolean enableRatings, ServiceContext serviceContext)
 		throws PortalException {
@@ -282,7 +264,6 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 		calendar.setModifiedDate(serviceContext.getModifiedDate(null));
 		calendar.setNameMap(nameMap);
 		calendar.setDescriptionMap(descriptionMap);
-		calendar.setTimeZoneId(timeZoneId);
 		calendar.setColor(color);
 		calendar.setDefaultCalendar(defaultCalendar);
 		calendar.setEnableComments(enableComments);
@@ -307,8 +288,8 @@ public class CalendarLocalServiceImpl extends CalendarLocalServiceBaseImpl {
 		Calendar calendar = calendarPersistence.findByPrimaryKey(calendarId);
 
 		return updateCalendar(
-			calendarId, nameMap, descriptionMap, calendar.getTimeZoneId(),
-			color, calendar.isDefaultCalendar(), calendar.isEnableComments(),
+			calendarId, nameMap, descriptionMap, color,
+			calendar.isDefaultCalendar(), calendar.isEnableComments(),
 			calendar.isEnableRatings(), serviceContext);
 	}
 
