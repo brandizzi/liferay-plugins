@@ -45,13 +45,13 @@ public class CalendarServiceUtil {
 		long groupId, long calendarResourceId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
-		java.lang.String timeZoneId, int color, boolean defaultCalendar,
-		boolean enableComments, boolean enableRatings,
+		int color, boolean defaultCalendar, boolean enableComments,
+		boolean enableRatings,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addCalendar(groupId, calendarResourceId, nameMap,
-			descriptionMap, timeZoneId, color, defaultCalendar, enableComments,
+			descriptionMap, color, defaultCalendar, enableComments,
 			enableRatings, serviceContext);
 	}
 
@@ -207,24 +207,23 @@ public class CalendarServiceUtil {
 		long calendarId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
-		int color, com.liferay.portal.service.ServiceContext serviceContext)
+		int color, boolean defaultCalendar, boolean enableComments,
+		boolean enableRatings,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateCalendar(calendarId, nameMap, descriptionMap, color,
-			serviceContext);
+			defaultCalendar, enableComments, enableRatings, serviceContext);
 	}
 
 	public static com.liferay.calendar.model.Calendar updateCalendar(
 		long calendarId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
-		java.lang.String timeZoneId, int color, boolean defaultCalendar,
-		boolean enableComments, boolean enableRatings,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		int color, com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .updateCalendar(calendarId, nameMap, descriptionMap,
-			timeZoneId, color, defaultCalendar, enableComments, enableRatings,
+				   .updateCalendar(calendarId, nameMap, descriptionMap, color,
 			serviceContext);
 	}
 

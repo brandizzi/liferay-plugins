@@ -441,21 +441,6 @@ public interface CalendarModel extends BaseModel<Calendar>, LocalizedModel,
 		Locale defaultLocale);
 
 	/**
-	 * Returns the time zone ID of this calendar.
-	 *
-	 * @return the time zone ID of this calendar
-	 */
-	@AutoEscape
-	public String getTimeZoneId();
-
-	/**
-	 * Sets the time zone ID of this calendar.
-	 *
-	 * @param timeZoneId the time zone ID of this calendar
-	 */
-	public void setTimeZoneId(String timeZoneId);
-
-	/**
 	 * Returns the color of this calendar.
 	 *
 	 * @return the color of this calendar
@@ -582,19 +567,19 @@ public interface CalendarModel extends BaseModel<Calendar>, LocalizedModel,
 	public Object clone();
 
 	@Override
-	public int compareTo(com.liferay.calendar.model.Calendar calendar);
+	public int compareTo(Calendar calendar);
 
 	@Override
 	public int hashCode();
 
 	@Override
-	public CacheModel<com.liferay.calendar.model.Calendar> toCacheModel();
+	public CacheModel<Calendar> toCacheModel();
 
 	@Override
-	public com.liferay.calendar.model.Calendar toEscapedModel();
+	public Calendar toEscapedModel();
 
 	@Override
-	public com.liferay.calendar.model.Calendar toUnescapedModel();
+	public Calendar toUnescapedModel();
 
 	@Override
 	public String toString();
