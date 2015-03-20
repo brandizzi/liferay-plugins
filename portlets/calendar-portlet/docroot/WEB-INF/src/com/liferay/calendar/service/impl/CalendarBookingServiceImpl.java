@@ -22,8 +22,6 @@ import com.liferay.calendar.util.ActionKeys;
 import com.liferay.calendar.util.CalendarUtil;
 import com.liferay.calendar.util.JCalendarUtil;
 import com.liferay.calendar.util.RSSUtil;
-import com.liferay.calendar.workflow.CalendarBookingApprovalWorkflow;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -721,8 +719,5 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 
 		return calendarBookings;
 	}
-
-	@BeanReference(type = CalendarBookingApprovalWorkflow.class)
-	protected CalendarBookingApprovalWorkflow calendarBookingApprovalWorkflow;
 
 }
