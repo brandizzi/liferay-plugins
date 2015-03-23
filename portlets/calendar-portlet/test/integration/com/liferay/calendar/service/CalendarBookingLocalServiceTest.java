@@ -231,6 +231,20 @@ public class CalendarBookingLocalServiceTest {
 			WorkflowConstants.STATUS_DRAFT, calendarBooking.getStatus());
 	}
 
+	protected CalendarBooking getChildCalendarBooking(
+		CalendarBooking calendarBooking) {
+
+		List<CalendarBooking> childCalendarBookings =
+			calendarBooking.getChildCalendarBookings();
+		CalendarBooking childCalendarBooking = childCalendarBookings.get(0);
+
+		if (childCalendarBooking.isMasterBooking()) {
+			childCalendarBooking = childCalendarBookings.get(1);
+		}
+
+		return childCalendarBooking;
+	}
+
 	private User _user;
 
 }
