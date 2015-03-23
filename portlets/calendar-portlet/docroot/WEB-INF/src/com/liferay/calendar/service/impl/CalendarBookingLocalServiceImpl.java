@@ -224,8 +224,10 @@ public class CalendarBookingLocalServiceImpl
 
 		// Workflow
 
-		calendarBooking = startWorkflowInstance(
-			userId, calendarBooking, serviceContext);
+		if (calendarBooking.isMasterBooking()) {
+			calendarBooking = startWorkflowInstance(
+				userId, calendarBooking, serviceContext);
+		}
 
 		return calendarBooking;
 	}
@@ -841,8 +843,10 @@ public class CalendarBookingLocalServiceImpl
 
 		// Workflow
 
-		calendarBooking = startWorkflowInstance(
-			userId, calendarBooking, serviceContext);
+		if (calendarBooking.isMasterBooking()) {
+			calendarBooking = startWorkflowInstance(
+				userId, calendarBooking, serviceContext);
+		}
 
 		// Notifications
 
