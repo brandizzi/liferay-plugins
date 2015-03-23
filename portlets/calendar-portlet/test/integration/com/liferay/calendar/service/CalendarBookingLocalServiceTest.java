@@ -149,8 +149,7 @@ public class CalendarBookingLocalServiceTest {
 			calendarBooking);
 
 		Assert.assertEquals(
-			WorkflowConstants.STATUS_APPROVED,
-			childCalendarBooking.getStatus());
+			WorkflowConstants.STATUS_PENDING, childCalendarBooking.getStatus());
 
 		CalendarBookingLocalServiceUtil.moveCalendarBookingToTrash(
 			_user.getUserId(), calendarBooking);
@@ -198,8 +197,7 @@ public class CalendarBookingLocalServiceTest {
 			calendarBooking);
 
 		Assert.assertEquals(
-			WorkflowConstants.STATUS_APPROVED,
-			childCalendarBooking.getStatus());
+			WorkflowConstants.STATUS_PENDING, childCalendarBooking.getStatus());
 
 		CalendarBookingLocalServiceUtil.moveCalendarBookingToTrash(
 			_user.getUserId(), calendarBooking);
