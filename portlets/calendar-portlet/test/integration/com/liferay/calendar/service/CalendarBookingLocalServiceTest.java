@@ -28,6 +28,8 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
+import java.util.List;
+
 import org.jboss.arquillian.junit.Arquillian;
 
 import org.junit.After;
@@ -108,6 +110,112 @@ public class CalendarBookingLocalServiceTest {
 
 		Assert.assertEquals(
 			WorkflowConstants.STATUS_DRAFT, calendarBooking.getStatus());
+	}
+
+	@Test
+	public void testMovedToTrashEventResultsInMovedToTrashChildren()
+		throws PortalException {
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setCompanyId(_user.getCompanyId());
+
+		CalendarResource calendarResource =
+			CalendarResourceUtil.getUserCalendarResource(
+				_user.getUserId(), serviceContext);
+		Calendar calendar = calendarResource.getDefaultCalendar();
+		Calendar invitedCalendar = CalendarLocalServiceUtil.addCalendar(
+			_user.getUserId(), _user.getGroupId(),
+			calendarResource.getCalendarResourceId(),
+			RandomTestUtil.randomLocaleStringMap(),
+			RandomTestUtil.randomLocaleStringMap(),
+			calendarResource.getTimeZoneId(), RandomTestUtil.randomInt(), false,
+			false, false, serviceContext);
+
+		long startDate = DateUtil.newTime();
+
+		CalendarBooking calendarBooking =
+			CalendarBookingLocalServiceUtil.addCalendarBooking(
+				_user.getUserId(), calendar.getCalendarId(),
+				new long[] { invitedCalendar.getCalendarId() },
+				CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
+				RandomTestUtil.randomLocaleStringMap(),
+				RandomTestUtil.randomLocaleStringMap(),
+				RandomTestUtil.randomString(), startDate, startDate + 36000000,
+				false, null, 0, null, 0, null, serviceContext);
+
+		CalendarBooking childCalendarBooking = getChildCalendarBooking(
+			calendarBooking);
+
+		Assert.assertEquals(
+			WorkflowConstants.STATUS_APPROVED,
+			childCalendarBooking.getStatus());
+
+		CalendarBookingLocalServiceUtil.moveCalendarBookingToTrash(
+			_user.getUserId(), calendarBooking);
+
+		childCalendarBooking = getChildCalendarBooking(calendarBooking);
+
+		Assert.assertEquals(
+			WorkflowConstants.STATUS_IN_TRASH,
+			childCalendarBooking.getStatus());
+	}
+
+	@Test
+	public void testRestoredFromTrashEventResultsInRestoredFromTrashChildren()
+		throws PortalException {
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setCompanyId(_user.getCompanyId());
+
+		CalendarResource calendarResource =
+			CalendarResourceUtil.getUserCalendarResource(
+				_user.getUserId(), serviceContext);
+		Calendar calendar = calendarResource.getDefaultCalendar();
+		Calendar invitedCalendar = CalendarLocalServiceUtil.addCalendar(
+			_user.getUserId(), _user.getGroupId(),
+			calendarResource.getCalendarResourceId(),
+			RandomTestUtil.randomLocaleStringMap(),
+			RandomTestUtil.randomLocaleStringMap(),
+			calendarResource.getTimeZoneId(), RandomTestUtil.randomInt(), false,
+			false, false, serviceContext);
+
+		long startDate = DateUtil.newTime();
+
+		CalendarBooking calendarBooking =
+			CalendarBookingLocalServiceUtil.addCalendarBooking(
+				_user.getUserId(), calendar.getCalendarId(),
+				new long[] { invitedCalendar.getCalendarId() },
+				CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
+				RandomTestUtil.randomLocaleStringMap(),
+				RandomTestUtil.randomLocaleStringMap(),
+				RandomTestUtil.randomString(), startDate, startDate + 36000000,
+				false, null, 0, null, 0, null, serviceContext);
+
+		CalendarBooking childCalendarBooking = getChildCalendarBooking(
+			calendarBooking);
+
+		Assert.assertEquals(
+			WorkflowConstants.STATUS_APPROVED,
+			childCalendarBooking.getStatus());
+
+		CalendarBookingLocalServiceUtil.moveCalendarBookingToTrash(
+			_user.getUserId(), calendarBooking);
+
+		childCalendarBooking = getChildCalendarBooking(calendarBooking);
+
+		Assert.assertEquals(
+			WorkflowConstants.STATUS_IN_TRASH,
+			childCalendarBooking.getStatus());
+
+		CalendarBookingLocalServiceUtil.restoreCalendarBookingFromTrash(
+			_user.getUserId(), calendarBooking.getCalendarBookingId());
+
+		childCalendarBooking = getChildCalendarBooking(calendarBooking);
+
+		Assert.assertEquals(
+			WorkflowConstants.STATUS_PENDING, childCalendarBooking.getStatus());
 	}
 
 	@Test
