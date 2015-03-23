@@ -1007,6 +1007,36 @@ public class CalendarBookingLocalServiceImpl
 					serviceContext);
 			}
 		}
+		else if (status == CalendarBookingWorkflowConstants.STATUS_APPROVED) {
+			List<CalendarBooking> childCalendarBookings =
+				calendarBooking.getChildCalendarBookings();
+
+			for (CalendarBooking childCalendarBooking : childCalendarBookings) {
+				if (childCalendarBooking.equals(calendarBooking)) {
+					continue;
+				}
+
+				updateStatus(
+					userId, childCalendarBooking,
+					CalendarBookingWorkflowConstants.STATUS_PENDING,
+					serviceContext);
+			}
+		}
+		else {
+			List<CalendarBooking> childCalendarBookings =
+				calendarBooking.getChildCalendarBookings();
+
+			for (CalendarBooking childCalendarBooking : childCalendarBookings) {
+				if (childCalendarBooking.equals(calendarBooking)) {
+					continue;
+				}
+
+				updateStatus(
+					userId, childCalendarBooking,
+					CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING,
+					serviceContext);
+			}
+		}
 
 		// Asset
 
