@@ -96,6 +96,36 @@ public class UpgradeCalendarBookingTest {
 	}
 
 	@Test
+	public void testApprovedChildOfApprovedEventStaysApproved()
+		throws Exception {
+
+		setCalendarBookingsInitialStatuses(
+			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			CalendarBookingWorkflowConstants.STATUS_APPROVED);
+
+		UpgradeCalendarBooking upgradeCalendarBooking =
+			new UpgradeCalendarBooking();
+
+		upgradeCalendarBooking.doUpgrade();
+
+		EntityCacheUtil.clearCache(CalendarBookingImpl.class);
+
+		_calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			_calendarBooking.getCalendarBookingId());
+		_childCalendarBooking =
+			CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+				_childCalendarBooking.getCalendarBookingId());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			_calendarBooking.getStatus());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			_childCalendarBooking.getStatus());
+	}
+
+	@Test
 	public void testApprovedChildOfPendingEventShouldBeMasterPending()
 		throws Exception {
 
@@ -122,6 +152,34 @@ public class UpgradeCalendarBookingTest {
 
 		Assert.assertEquals(
 			CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING,
+			_childCalendarBooking.getStatus());
+	}
+
+	@Test
+	public void testMaybeChildOfApprovedEventStaysMaybe() throws Exception {
+		setCalendarBookingsInitialStatuses(
+			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			CalendarBookingWorkflowConstants.STATUS_MAYBE);
+
+		UpgradeCalendarBooking upgradeCalendarBooking =
+			new UpgradeCalendarBooking();
+
+		upgradeCalendarBooking.doUpgrade();
+
+		EntityCacheUtil.clearCache(CalendarBookingImpl.class);
+
+		_calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			_calendarBooking.getCalendarBookingId());
+		_childCalendarBooking =
+			CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+				_childCalendarBooking.getCalendarBookingId());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			_calendarBooking.getStatus());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_MAYBE,
 			_childCalendarBooking.getStatus());
 	}
 
@@ -182,66 +240,6 @@ public class UpgradeCalendarBookingTest {
 
 		Assert.assertEquals(
 			CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING,
-			_childCalendarBooking.getStatus());
-	}
-
-	@Test
-	public void testApprovedChildOfApprovedEventStaysApproved()
-		throws Exception {
-
-		setCalendarBookingsInitialStatuses(
-			CalendarBookingWorkflowConstants.STATUS_APPROVED,
-			CalendarBookingWorkflowConstants.STATUS_APPROVED);
-
-		UpgradeCalendarBooking upgradeCalendarBooking =
-			new UpgradeCalendarBooking();
-
-		upgradeCalendarBooking.doUpgrade();
-
-		EntityCacheUtil.clearCache(CalendarBookingImpl.class);
-
-		_calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
-			_calendarBooking.getCalendarBookingId());
-		_childCalendarBooking =
-			CalendarBookingLocalServiceUtil.fetchCalendarBooking(
-				_childCalendarBooking.getCalendarBookingId());
-
-		Assert.assertEquals(
-			CalendarBookingWorkflowConstants.STATUS_APPROVED,
-			_calendarBooking.getStatus());
-
-		Assert.assertEquals(
-			CalendarBookingWorkflowConstants.STATUS_APPROVED,
-			_childCalendarBooking.getStatus());
-	}
-
-	@Test
-	public void testMaybeChildOfApprovedEventStaysMaybe()
-		throws Exception {
-
-		setCalendarBookingsInitialStatuses(
-			CalendarBookingWorkflowConstants.STATUS_APPROVED,
-			CalendarBookingWorkflowConstants.STATUS_MAYBE);
-
-		UpgradeCalendarBooking upgradeCalendarBooking =
-			new UpgradeCalendarBooking();
-
-		upgradeCalendarBooking.doUpgrade();
-
-		EntityCacheUtil.clearCache(CalendarBookingImpl.class);
-
-		_calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
-			_calendarBooking.getCalendarBookingId());
-		_childCalendarBooking =
-			CalendarBookingLocalServiceUtil.fetchCalendarBooking(
-				_childCalendarBooking.getCalendarBookingId());
-
-		Assert.assertEquals(
-			CalendarBookingWorkflowConstants.STATUS_APPROVED,
-			_calendarBooking.getStatus());
-
-		Assert.assertEquals(
-			CalendarBookingWorkflowConstants.STATUS_MAYBE,
 			_childCalendarBooking.getStatus());
 	}
 
