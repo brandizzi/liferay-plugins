@@ -18,9 +18,12 @@ import com.liferay.calendar.model.Calendar;
 import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.calendar.model.CalendarBookingConstants;
 import com.liferay.calendar.model.CalendarResource;
+import com.liferay.calendar.model.impl.CalendarBookingImpl;
 import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
 import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.util.CalendarResourceUtil;
+import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
+import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
@@ -36,6 +39,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -89,6 +93,96 @@ public class UpgradeCalendarBookingTest {
 	@After
 	public void tearDown() throws Exception {
 		UserLocalServiceUtil.deleteUser(_user);
+	}
+
+	@Test
+	public void testApprovedChildOfPendingEventShouldBeMasterPending()
+		throws Exception {
+
+		setCalendarBookingsInitialStatuses(
+			CalendarBookingWorkflowConstants.STATUS_PENDING,
+			CalendarBookingWorkflowConstants.STATUS_APPROVED);
+
+		UpgradeCalendarBooking upgradeCalendarBooking =
+			new UpgradeCalendarBooking();
+
+		upgradeCalendarBooking.doUpgrade();
+
+		EntityCacheUtil.clearCache(CalendarBookingImpl.class);
+
+		_calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			_calendarBooking.getCalendarBookingId());
+		_childCalendarBooking =
+			CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+				_childCalendarBooking.getCalendarBookingId());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_PENDING,
+			_calendarBooking.getStatus());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING,
+			_childCalendarBooking.getStatus());
+	}
+
+	@Test
+	public void testMaybeChildOfPendingEventShouldBeMasterPending()
+		throws Exception {
+
+		setCalendarBookingsInitialStatuses(
+			CalendarBookingWorkflowConstants.STATUS_PENDING,
+			CalendarBookingWorkflowConstants.STATUS_MAYBE);
+
+		UpgradeCalendarBooking upgradeCalendarBooking =
+			new UpgradeCalendarBooking();
+
+		upgradeCalendarBooking.doUpgrade();
+
+		EntityCacheUtil.clearCache(CalendarBookingImpl.class);
+
+		_calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			_calendarBooking.getCalendarBookingId());
+		_childCalendarBooking =
+			CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+				_childCalendarBooking.getCalendarBookingId());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_PENDING,
+			_calendarBooking.getStatus());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING,
+			_childCalendarBooking.getStatus());
+	}
+
+	@Test
+	public void testPendingChildOfPendingEventShouldBeMasterPending()
+		throws Exception {
+
+		setCalendarBookingsInitialStatuses(
+			CalendarBookingWorkflowConstants.STATUS_PENDING,
+			CalendarBookingWorkflowConstants.STATUS_PENDING);
+
+		UpgradeCalendarBooking upgradeCalendarBooking =
+			new UpgradeCalendarBooking();
+
+		upgradeCalendarBooking.doUpgrade();
+
+		EntityCacheUtil.clearCache(CalendarBookingImpl.class);
+
+		_calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			_calendarBooking.getCalendarBookingId());
+		_childCalendarBooking =
+			CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+				_childCalendarBooking.getCalendarBookingId());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_PENDING,
+			_calendarBooking.getStatus());
+
+		Assert.assertEquals(
+			CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING,
+			_childCalendarBooking.getStatus());
 	}
 
 	protected void setCalendarBookingsInitialStatuses(
