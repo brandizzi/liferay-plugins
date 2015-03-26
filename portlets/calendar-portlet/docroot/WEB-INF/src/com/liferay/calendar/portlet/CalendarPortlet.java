@@ -324,7 +324,6 @@ public class CalendarPortlet extends MVCPortlet {
 		String recurrence = getRecurrence(actionRequest);
 		long[] reminders = getReminders(actionRequest);
 		String[] remindersType = getRemindersType(actionRequest);
-		int status = ParamUtil.getInteger(actionRequest, "status");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			CalendarBooking.class.getName(), actionRequest);
@@ -363,7 +362,7 @@ public class CalendarPortlet extends MVCPortlet {
 						startTimeJCalendar.getTimeInMillis(),
 						endTimeJCalendar.getTimeInMillis(), allDay, recurrence,
 						allFollowing, reminders[0], remindersType[0],
-						reminders[1], remindersType[1], status, serviceContext);
+						reminders[1], remindersType[1], serviceContext);
 			}
 			else {
 				calendarBooking =
@@ -389,7 +388,7 @@ public class CalendarPortlet extends MVCPortlet {
 						calendarBooking.getStartTime(),
 						calendarBooking.getEndTime(), allDay, recurrence,
 						reminders[0], remindersType[0], reminders[1],
-						remindersType[1], status, serviceContext);
+						remindersType[1], serviceContext);
 			}
 		}
 

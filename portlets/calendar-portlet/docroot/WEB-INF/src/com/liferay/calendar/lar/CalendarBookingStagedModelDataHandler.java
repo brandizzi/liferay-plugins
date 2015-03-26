@@ -197,7 +197,7 @@ public class CalendarBookingStagedModelDataHandler
 						calendarBooking.getFirstReminderType(),
 						calendarBooking.getSecondReminder(),
 						calendarBooking.getSecondReminderType(),
-						calendarBooking.getStatus(), serviceContext);
+						serviceContext);
 			}
 		}
 		else {
