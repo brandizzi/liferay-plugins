@@ -757,8 +757,7 @@ public class CalendarBookingLocalServiceImpl
 			Map<Locale, String> descriptionMap, String location, long startTime,
 			long endTime, boolean allDay, String recurrence, long firstReminder,
 			String firstReminderType, long secondReminder,
-			String secondReminderType, int status,
-			ServiceContext serviceContext)
+			String secondReminderType, ServiceContext serviceContext)
 		throws PortalException {
 
 		// Calendar booking
@@ -860,7 +859,7 @@ public class CalendarBookingLocalServiceImpl
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
 			String location, long startTime, long endTime, boolean allDay,
 			String recurrence, long firstReminder, String firstReminderType,
-			long secondReminder, String secondReminderType, int status,
+			long secondReminder, String secondReminderType,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -871,7 +870,7 @@ public class CalendarBookingLocalServiceImpl
 			userId, calendarBookingId, calendarId, childCalendarIds, titleMap,
 			descriptionMap, location, startTime, endTime, allDay, recurrence,
 			firstReminder, firstReminderType, secondReminder,
-			secondReminderType, status, serviceContext);
+			secondReminderType, serviceContext);
 	}
 
 	@Override
@@ -882,8 +881,7 @@ public class CalendarBookingLocalServiceImpl
 			String location, long startTime, long endTime, boolean allDay,
 			String recurrence, boolean allFollowing, long firstReminder,
 			String firstReminderType, long secondReminder,
-			String secondReminderType, int status,
-			ServiceContext serviceContext)
+			String secondReminderType, ServiceContext serviceContext)
 		throws PortalException {
 
 		CalendarBooking calendarBooking =
@@ -894,7 +892,7 @@ public class CalendarBookingLocalServiceImpl
 				userId, calendarBookingId, calendarId, childCalendarIds,
 				titleMap, descriptionMap, location, startTime, endTime, allDay,
 				recurrence, firstReminder, firstReminderType, secondReminder,
-				secondReminderType, status, serviceContext);
+				secondReminderType, serviceContext);
 		}
 
 		String oldRecurrence = calendarBooking.getRecurrence();
@@ -934,7 +932,7 @@ public class CalendarBookingLocalServiceImpl
 			Map<Locale, String> descriptionMap, String location, long startTime,
 			long endTime, boolean allDay, String recurrence,
 			boolean allFollowing, long firstReminder, String firstReminderType,
-			long secondReminder, String secondReminderType, int status,
+			long secondReminder, String secondReminderType,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -945,7 +943,7 @@ public class CalendarBookingLocalServiceImpl
 			userId, calendarBookingId, instanceIndex, calendarId,
 			childCalendarIds, titleMap, descriptionMap, location, startTime,
 			endTime, allDay, recurrence, allFollowing, firstReminder,
-			firstReminderType, secondReminder, secondReminderType, status,
+			firstReminderType, secondReminder, secondReminderType,
 			serviceContext);
 	}
 
