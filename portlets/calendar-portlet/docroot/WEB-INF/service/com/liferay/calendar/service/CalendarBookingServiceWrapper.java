@@ -291,13 +291,13 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 		java.lang.String location, long startTime, long endTime,
 		boolean allDay, java.lang.String recurrence, long firstReminder,
 		java.lang.String firstReminderType, long secondReminder,
-		java.lang.String secondReminderType, int status,
+		java.lang.String secondReminderType,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _calendarBookingService.updateCalendarBooking(calendarBookingId,
 			calendarId, childCalendarIds, titleMap, descriptionMap, location,
 			startTime, endTime, allDay, recurrence, firstReminder,
-			firstReminderType, secondReminder, secondReminderType, status,
+			firstReminderType, secondReminder, secondReminderType,
 			serviceContext);
 	}
 
@@ -309,13 +309,13 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 		java.lang.String location, long startTime, long endTime,
 		boolean allDay, java.lang.String recurrence, long firstReminder,
 		java.lang.String firstReminderType, long secondReminder,
-		java.lang.String secondReminderType, int status,
+		java.lang.String secondReminderType,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _calendarBookingService.updateCalendarBooking(calendarBookingId,
 			calendarId, titleMap, descriptionMap, location, startTime, endTime,
 			allDay, recurrence, firstReminder, firstReminderType,
-			secondReminder, secondReminderType, status, serviceContext);
+			secondReminder, secondReminderType, serviceContext);
 	}
 
 	@Override
@@ -327,14 +327,14 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 		java.lang.String location, long startTime, long endTime,
 		boolean allDay, java.lang.String recurrence, boolean allFollowing,
 		long firstReminder, java.lang.String firstReminderType,
-		long secondReminder, java.lang.String secondReminderType, int status,
+		long secondReminder, java.lang.String secondReminderType,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _calendarBookingService.updateCalendarBookingInstance(calendarBookingId,
 			instanceIndex, calendarId, childCalendarIds, titleMap,
 			descriptionMap, location, startTime, endTime, allDay, recurrence,
 			allFollowing, firstReminder, firstReminderType, secondReminder,
-			secondReminderType, status, serviceContext);
+			secondReminderType, serviceContext);
 	}
 
 	@Override
@@ -345,14 +345,14 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 		java.lang.String location, long startTime, long endTime,
 		boolean allDay, java.lang.String recurrence, boolean allFollowing,
 		long firstReminder, java.lang.String firstReminderType,
-		long secondReminder, java.lang.String secondReminderType, int status,
+		long secondReminder, java.lang.String secondReminderType,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _calendarBookingService.updateCalendarBookingInstance(calendarBookingId,
 			instanceIndex, calendarId, titleMap, descriptionMap, location,
 			startTime, endTime, allDay, recurrence, allFollowing,
 			firstReminder, firstReminderType, secondReminder,
-			secondReminderType, status, serviceContext);
+			secondReminderType, serviceContext);
 	}
 
 	@Override
@@ -366,7 +366,7 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 		int endTimeMinute, java.lang.String timeZoneId, boolean allDay,
 		java.lang.String recurrence, boolean allFollowing, long firstReminder,
 		java.lang.String firstReminderType, long secondReminder,
-		java.lang.String secondReminderType, int status,
+		java.lang.String secondReminderType,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _calendarBookingService.updateCalendarBookingInstance(calendarBookingId,
@@ -375,7 +375,7 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 			startTimeMinute, endTimeYear, endTimeMonth, endTimeDay,
 			endTimeHour, endTimeMinute, timeZoneId, allDay, recurrence,
 			allFollowing, firstReminder, firstReminderType, secondReminder,
-			secondReminderType, status, serviceContext);
+			secondReminderType, serviceContext);
 	}
 
 	@Override
@@ -386,13 +386,13 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 		java.lang.String location, long offset, long duration, boolean allDay,
 		java.lang.String recurrence, long firstReminder,
 		java.lang.String firstReminderType, long secondReminder,
-		java.lang.String secondReminderType, int status,
+		java.lang.String secondReminderType,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _calendarBookingService.updateOffsetAndDuration(calendarBookingId,
 			calendarId, childCalendarIds, titleMap, descriptionMap, location,
 			offset, duration, allDay, recurrence, firstReminder,
-			firstReminderType, secondReminder, secondReminderType, status,
+			firstReminderType, secondReminder, secondReminderType,
 			serviceContext);
 	}
 
@@ -404,13 +404,13 @@ public class CalendarBookingServiceWrapper implements CalendarBookingService,
 		java.lang.String location, long offset, long duration, boolean allDay,
 		java.lang.String recurrence, long firstReminder,
 		java.lang.String firstReminderType, long secondReminder,
-		java.lang.String secondReminderType, int status,
+		java.lang.String secondReminderType,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _calendarBookingService.updateOffsetAndDuration(calendarBookingId,
 			calendarId, titleMap, descriptionMap, location, offset, duration,
 			allDay, recurrence, firstReminder, firstReminderType,
-			secondReminder, secondReminderType, status, serviceContext);
+			secondReminder, secondReminderType, serviceContext);
 	}
 
 	/**

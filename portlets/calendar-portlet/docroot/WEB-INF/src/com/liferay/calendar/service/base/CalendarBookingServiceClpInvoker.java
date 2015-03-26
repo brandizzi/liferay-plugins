@@ -165,8 +165,7 @@ public class CalendarBookingServiceClpInvoker {
 				"long", "long", "long[][]", "java.util.Map", "java.util.Map",
 				"java.lang.String", "long", "long", "boolean",
 				"java.lang.String", "long", "java.lang.String", "long",
-				"java.lang.String", "int",
-				"com.liferay.portal.service.ServiceContext"
+				"java.lang.String", "com.liferay.portal.service.ServiceContext"
 			};
 
 		_methodName132 = "updateCalendarBooking";
@@ -175,8 +174,7 @@ public class CalendarBookingServiceClpInvoker {
 				"long", "long", "java.util.Map", "java.util.Map",
 				"java.lang.String", "long", "long", "boolean",
 				"java.lang.String", "long", "java.lang.String", "long",
-				"java.lang.String", "int",
-				"com.liferay.portal.service.ServiceContext"
+				"java.lang.String", "com.liferay.portal.service.ServiceContext"
 			};
 
 		_methodName133 = "updateCalendarBookingInstance";
@@ -185,7 +183,7 @@ public class CalendarBookingServiceClpInvoker {
 				"long", "int", "long", "long[][]", "java.util.Map",
 				"java.util.Map", "java.lang.String", "long", "long", "boolean",
 				"java.lang.String", "boolean", "long", "java.lang.String",
-				"long", "java.lang.String", "int",
+				"long", "java.lang.String",
 				"com.liferay.portal.service.ServiceContext"
 			};
 
@@ -196,7 +194,7 @@ public class CalendarBookingServiceClpInvoker {
 				"java.lang.String", "int", "int", "int", "int", "int", "int",
 				"int", "int", "int", "int", "java.lang.String", "boolean",
 				"java.lang.String", "boolean", "long", "java.lang.String",
-				"long", "java.lang.String", "int",
+				"long", "java.lang.String",
 				"com.liferay.portal.service.ServiceContext"
 			};
 
@@ -206,7 +204,7 @@ public class CalendarBookingServiceClpInvoker {
 				"long", "int", "long", "java.util.Map", "java.util.Map",
 				"java.lang.String", "long", "long", "boolean",
 				"java.lang.String", "boolean", "long", "java.lang.String",
-				"long", "java.lang.String", "int",
+				"long", "java.lang.String",
 				"com.liferay.portal.service.ServiceContext"
 			};
 
@@ -216,8 +214,7 @@ public class CalendarBookingServiceClpInvoker {
 				"long", "long", "long[][]", "java.util.Map", "java.util.Map",
 				"java.lang.String", "long", "long", "boolean",
 				"java.lang.String", "long", "java.lang.String", "long",
-				"java.lang.String", "int",
-				"com.liferay.portal.service.ServiceContext"
+				"java.lang.String", "com.liferay.portal.service.ServiceContext"
 			};
 
 		_methodName137 = "updateOffsetAndDuration";
@@ -226,8 +223,7 @@ public class CalendarBookingServiceClpInvoker {
 				"long", "long", "java.util.Map", "java.util.Map",
 				"java.lang.String", "long", "long", "boolean",
 				"java.lang.String", "long", "java.lang.String", "long",
-				"java.lang.String", "int",
-				"com.liferay.portal.service.ServiceContext"
+				"java.lang.String", "com.liferay.portal.service.ServiceContext"
 			};
 	}
 
@@ -470,8 +466,7 @@ public class CalendarBookingServiceClpInvoker {
 				(java.lang.String)arguments[11],
 				((Long)arguments[12]).longValue(),
 				(java.lang.String)arguments[13],
-				((Integer)arguments[14]).intValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[15]);
+				(com.liferay.portal.service.ServiceContext)arguments[14]);
 		}
 
 		if (_methodName132.equals(name) &&
@@ -489,8 +484,7 @@ public class CalendarBookingServiceClpInvoker {
 				(java.lang.String)arguments[10],
 				((Long)arguments[11]).longValue(),
 				(java.lang.String)arguments[12],
-				((Integer)arguments[13]).intValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[14]);
+				(com.liferay.portal.service.ServiceContext)arguments[13]);
 		}
 
 		if (_methodName133.equals(name) &&
@@ -510,8 +504,7 @@ public class CalendarBookingServiceClpInvoker {
 				(java.lang.String)arguments[13],
 				((Long)arguments[14]).longValue(),
 				(java.lang.String)arguments[15],
-				((Integer)arguments[16]).intValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[17]);
+				(com.liferay.portal.service.ServiceContext)arguments[16]);
 		}
 
 		if (_methodName134.equals(name) &&
@@ -540,8 +533,7 @@ public class CalendarBookingServiceClpInvoker {
 				(java.lang.String)arguments[21],
 				((Long)arguments[22]).longValue(),
 				(java.lang.String)arguments[23],
-				((Integer)arguments[24]).intValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[25]);
+				(com.liferay.portal.service.ServiceContext)arguments[24]);
 		}
 
 		if (_methodName135.equals(name) &&
@@ -561,8 +553,7 @@ public class CalendarBookingServiceClpInvoker {
 				(java.lang.String)arguments[12],
 				((Long)arguments[13]).longValue(),
 				(java.lang.String)arguments[14],
-				((Integer)arguments[15]).intValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[16]);
+				(com.liferay.portal.service.ServiceContext)arguments[15]);
 		}
 
 		if (_methodName136.equals(name) &&
@@ -580,8 +571,7 @@ public class CalendarBookingServiceClpInvoker {
 				(java.lang.String)arguments[11],
 				((Long)arguments[12]).longValue(),
 				(java.lang.String)arguments[13],
-				((Integer)arguments[14]).intValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[15]);
+				(com.liferay.portal.service.ServiceContext)arguments[14]);
 		}
 
 		if (_methodName137.equals(name) &&
@@ -599,8 +589,7 @@ public class CalendarBookingServiceClpInvoker {
 				(java.lang.String)arguments[10],
 				((Long)arguments[11]).longValue(),
 				(java.lang.String)arguments[12],
-				((Integer)arguments[13]).intValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[14]);
+				(com.liferay.portal.service.ServiceContext)arguments[13]);
 		}
 
 		throw new UnsupportedOperationException();
