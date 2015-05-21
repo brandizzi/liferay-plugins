@@ -14,6 +14,7 @@
 
 package com.liferay.calendar.service.impl;
 
+import com.liferay.calendar.CalendarBookingAllocatedSlotException;
 import com.liferay.calendar.CalendarBookingDurationException;
 import com.liferay.calendar.CalendarBookingTitleException;
 import com.liferay.calendar.model.Calendar;
@@ -130,7 +131,9 @@ public class CalendarBookingLocalServiceImpl
 
 		Date now = new Date();
 
-		validate(titleMap, startTimeJCalendar, endTimeJCalendar);
+		validate(
+			titleMap, calendar, calendarBookingId, startTimeJCalendar,
+			endTimeJCalendar);
 
 		CalendarBooking calendarBooking = calendarBookingPersistence.create(
 			calendarBookingId);
@@ -710,7 +713,9 @@ public class CalendarBookingLocalServiceImpl
 			firstReminder = originalSecondReminder;
 		}
 
-		validate(titleMap, startTimeJCalendar, endTimeJCalendar);
+		validate(
+			titleMap, calendar, calendarBookingId, startTimeJCalendar,
+			endTimeJCalendar);
 
 		calendarBooking.setGroupId(calendar.getGroupId());
 		calendarBooking.setCompanyId(user.getCompanyId());
@@ -1079,9 +1084,11 @@ public class CalendarBookingLocalServiceImpl
 	}
 
 	protected void validate(
-			Map<Locale, String> titleMap, java.util.Calendar startTimeJCalendar,
+			Map<Locale, String> titleMap, Calendar calendar,
+			long calendarBookingId,
+			java.util.Calendar startTimeJCalendar,
 			java.util.Calendar endTimeJCalendar)
-		throws PortalException {
+		throws PortalException, SystemException {
 
 		if (Validator.isNull(titleMap) || titleMap.isEmpty()) {
 			throw new CalendarBookingTitleException();
@@ -1089,6 +1096,27 @@ public class CalendarBookingLocalServiceImpl
 
 		if (startTimeJCalendar.after(endTimeJCalendar)) {
 			throw new CalendarBookingDurationException();
+		}
+
+		// Search for events...
+		List<CalendarBooking> calendarBookings = search(
+			calendar.getCompanyId(), // ...in the calendar company
+			new long[0],
+			new long[]{calendar.getCalendarId()}, // ...in the specifric calendar...
+			new long[0], -1, null,
+			startTimeJCalendar.getTimeInMillis(), // ...that either starts...
+			endTimeJCalendar.getTimeInMillis(), // ...or ends during this interval.
+			true, // ...if a recurring instance falls in this interval, it counts.
+			new int[] { // those are relevant status (denied and trashed events do not count.
+				CalendarBookingWorkflowConstants.STATUS_APPROVED,
+				CalendarBookingWorkflowConstants.STATUS_MAYBE,
+				CalendarBookingWorkflowConstants.STATUS_PENDING
+			}, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		for (CalendarBooking cb : calendarBookings) {
+			if (cb.getCalendarBookingId() != calendarBookingId) {  // If any of the found events are not the current one...
+				throw new CalendarBookingAllocatedSlotException(); // ...just fail
+			}
 		}
 	}
 
