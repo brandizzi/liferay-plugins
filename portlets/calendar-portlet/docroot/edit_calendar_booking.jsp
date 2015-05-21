@@ -105,6 +105,7 @@ List<Calendar> manageableCalendars = CalendarServiceUtil.search(themeDisplay.get
 	<aui:input name="allFollowing" type="hidden" />
 	<aui:input name="updateCalendarBookingInstance" type="hidden" />
 
+	<liferay-ui:error exception="<%= CalendarBookingAllocatedSlotException.class %>" message="There is another event at this interval." />
 	<liferay-ui:error exception="<%= CalendarBookingDurationException.class %>" message="please-enter-a-start-date-that-comes-before-the-end-date" />
 
 	<liferay-ui:asset-categories-error />
