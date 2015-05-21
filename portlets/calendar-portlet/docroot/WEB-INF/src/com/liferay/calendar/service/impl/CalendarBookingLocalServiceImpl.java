@@ -1085,8 +1085,7 @@ public class CalendarBookingLocalServiceImpl
 
 	protected void validate(
 			Map<Locale, String> titleMap, Calendar calendar,
-			long calendarBookingId,
-			java.util.Calendar startTimeJCalendar,
+			long calendarBookingId, java.util.Calendar startTimeJCalendar,
 			java.util.Calendar endTimeJCalendar)
 		throws PortalException, SystemException {
 

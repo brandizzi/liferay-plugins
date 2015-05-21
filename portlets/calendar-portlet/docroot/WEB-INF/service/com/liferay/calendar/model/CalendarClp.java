@@ -923,7 +923,9 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 			return StringPool.BLANK;
 		}
 
-		return LocalizationUtil.getDefaultLanguageId(xml);
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
+
+		return LocalizationUtil.getDefaultLanguageId(xml, defaultLocale);
 	}
 
 	@Override
@@ -935,7 +937,7 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 	@SuppressWarnings("unused")
 	public void prepareLocalizedFieldsForImport(Locale defaultImportLocale)
 		throws LocaleException {
-		Locale defaultLocale = LocaleUtil.getDefault();
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
 
 		String modelDefaultLanguageId = getDefaultLanguageId();
 
@@ -1022,6 +1024,10 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 		else {
 			return false;
 		}
+	}
+
+	public Class<?> getClpSerializerClass() {
+		return _clpSerializerClass;
 	}
 
 	@Override
@@ -1168,4 +1174,5 @@ public class CalendarClp extends BaseModelImpl<Calendar> implements Calendar {
 	private boolean _enableComments;
 	private boolean _enableRatings;
 	private BaseModel<?> _calendarRemoteModel;
+	private Class<?> _clpSerializerClass = com.liferay.calendar.service.ClpSerializer.class;
 }
