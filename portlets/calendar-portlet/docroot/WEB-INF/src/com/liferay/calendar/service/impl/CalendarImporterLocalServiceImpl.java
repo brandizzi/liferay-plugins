@@ -879,17 +879,24 @@ public class CalendarImporterLocalServiceImpl
 			return;
 		}
 
-		long threadId = importMBThread(
-			mbDiscussion.getThreadId(), calendarBookingId);
-
-		addMBDiscussion(
-			PortalUUIDUtil.generate(), counterLocalService.increment(),
-			mbDiscussion.getGroupId(), mbDiscussion.getCompanyId(),
-			mbDiscussion.getUserId(), mbDiscussion.getUserName(),
-			mbDiscussion.getCreateDate(), mbDiscussion.getModifiedDate(),
+		mbDiscussion.setClassNameId(
 			classNameLocalService.getClassNameId(
-				CalendarBooking.class.getName()),
-			calendarBookingId, threadId);
+				CalendarBooking.class.getName()));
+		mbDiscussion.setClassPK(calendarBookingId);
+
+		mbDiscussionPersistence.update(mbDiscussion);
+
+		List<MBMessage> mbMessages = mbMessagePersistence.findByThreadId(
+			mbDiscussion.getThreadId());
+
+		for (MBMessage mbMessage : mbMessages) {
+			mbMessage.setClassNameId(
+				classNameLocalService.getClassNameId(
+					CalendarBooking.class.getName()));
+			mbMessage.setClassPK(calendarBookingId);
+
+			mbMessagePersistence.update(mbMessage);
+		}
 	}
 
 	protected long importMBMessage(
