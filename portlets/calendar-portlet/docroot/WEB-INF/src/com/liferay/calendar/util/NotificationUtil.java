@@ -33,6 +33,9 @@ import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.util.ContentUtil;
@@ -193,6 +196,18 @@ public class NotificationUtil {
 
 			if (notificationType == null) {
 				continue;
+			}
+
+			PermissionChecker permissionChecker = null;
+			try {
+				permissionChecker = PermissionCheckerFactoryUtil.create(user);
+			}
+			catch (Exception e) {
+				continue;
+			}
+
+			if (permissionChecker != null) {
+				PermissionThreadLocal.setPermissionChecker(permissionChecker);
 			}
 
 			NotificationSender notificationSender =
